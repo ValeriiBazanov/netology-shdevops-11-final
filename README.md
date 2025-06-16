@@ -1,6 +1,9 @@
 # Дипломная работа профессии "DevOps инженер"
+
 Автор: Базанов Валерий
+
 Группа: SHDEVOPS-11
+
 
 ## Создание облачной инфраструктуры
 
@@ -8,7 +11,15 @@
 
 [Директория с terraform скриптами](./src/prepare_account/)
 
-<image src="img/tbd" alt="Сервисный аккаунт">
+Переходим в директорию /src/prepare_account и выполняем следующие команды:
 
-<image src="img/tbd" alt="Bucket">
+```
+terraform init
+terraform apply
+```
 
+В результаты выполнения terraform скрипта создается сервисный аккаунт, бакет для хранения tfstate файла и файл конфигураций в корневой директории проекта ".aws/credentials".
+
+<image src="img/service_account.png" alt="Сервисный аккаунт">
+
+<image src="img/bucket.png" alt="Bucket">

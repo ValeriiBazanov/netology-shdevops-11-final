@@ -12,3 +12,5 @@
 personal.auto.tfvars
 
 *.cfg
+
+**/.aws/*

@@ -60,9 +60,14 @@ variable "bucket_name" {
   description = "Bucket for terraform backend"
 }
 
-
 variable "bucket_sse_algorithm" {
   type        = string
   default     = "aws:kms"
   description = "Bucket sse algorithm"
+}
+
+variable "profile_name" {
+  type        = string
+  default     = "finalwork"
+  description = "Profile name"
 }

@@ -42,4 +42,5 @@ resource "yandex_storage_bucket" "bucket_terraform_backend" {
     list        = false
     config_read = false
   }
+  depends_on = [ yandex_resourcemanager_folder_iam_member.service_account_role ]
 }
