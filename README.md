@@ -1,1 +1,14 @@
-# netology-shdevops-11-final
+# Дипломная работа профессии "DevOps инженер"
+Автор: Базанов Валерий
+Группа: SHDEVOPS-11
+
+## Создание облачной инфраструктуры
+
+1. Создаем сервисный аккаунт и бакет для хранения tfstate файла
+
+[Директория с terraform скриптами](./src/prepare_account/)
+
+<image src="img/tbd" alt="Сервисный аккаунт">
+
+<image src="img/tbd" alt="Bucket">
+
