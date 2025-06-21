@@ -9,13 +9,13 @@ terraform {
   
   backend "s3" {
     
-    shared_credentials_files = ["../../.aws/credentials"]
-    shared_config_files = [ "../../.aws/config" ]
+    shared_credentials_files = ["../tmp/credentials"]
+    shared_config_files = [ "../tmp/config" ]
     profile = "finalwork"
     region = "ru-central1"
 
     bucket     = "terraform-backend-vbazanov-final"
-    key        = "production/terraform.tfstate"
+    key        = "finalwork/terraform.tfstate"
 
     skip_region_validation      = true
     skip_credentials_validation = true

@@ -18,7 +18,7 @@ terraform init
 terraform apply
 ```
 
-В результаты выполнения terraform скрипта создаются сервисный аккаунт, бакет для хранения tfstate файла и файл конфигураций в корневой директории проекта ".aws/credentials".
+В результаты выполнения terraform скрипта создаются сервисный аккаунт, бакет для хранения tfstate файла и файл конфигураций в директории проекта "src/tmp/credentials".
 
 <image src="img/service_account.png" alt="Сервисный аккаунт">
 
@@ -27,24 +27,24 @@ terraform apply
 
 ### 2. Настраиваем окружение в terraform скриптах инфраструктуры
 
-В скрипте /src/init_infrastructure/providers.tf устанавливаем следующие значения для параметров из блока terraform/backend:
-- shared_credentials_files - ссылка на credential файл сгенерированный в пункте 1. Текущее значение "../../.aws/credentials".
+В скрипте /src/create_infrastructure/providers.tf устанавлены следующие значения для параметров из блока terraform/backend:
+- shared_credentials_files - ссылка на credential файл сгенерированный в пункте 1. Текущее значение "../tmp/credentials".
 - profile - значение переменной profile_name указанное при выполнении скрипта /src/prepare_account. Текущее значение "finalwork".
 - bucket - значение переменной bucket_name указанное при выполнении скрипта /src/prepare_account. Текущее значение "terraform-backend-vbazanov-final".
 
 
 ### 3. Создаем ноды кластера kubernates
 
-[Директория с terraform скриптами](./src/init_infrastructure/)
+[Директория с terraform скриптами](./src/create_infrastructure/)
 
-Переходим в директорию /src/init_infrastructure и выполняем следующие команды:
+Переходим в директорию /src/create_infrastructure и выполняем следующие команды:
 
 ```
 terraform init
 terraform apply
 ```
 
-В результаты выполнения terraform скрипта создаются сеть, три подсети nat инстанс, виртуальные машины для мастер и рабочих нод. В директории src сформирован hosts.yml, который будет использоваться ansible для создания кластера kubernates.
+В результаты выполнения terraform скрипта создаются сеть, три подсети nat инстанс, виртуальные машины для мастер и рабочих нод. Сформирован файл "src/tmp/host.yml", который будет использоваться ansible для создания кластера kubernates.
 
 <image src="img/tbd" alt="Сеть">
 
@@ -52,3 +52,17 @@ terraform apply
 
 <image src="img/tbd" alt="Виртуальные машины">
 
+
+### 4. Устанавливаем кластер kubernates
+
+[Ansible playbook](./src/install_k8s/playbook.yml)
+
+Переходим в директорию /src/install_k8s и запускаем ansible playbook для создания кластера kubernates.
+
+```
+ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ../tmp/host.yml playbook.yml --become --flush-cache
+```
+
+В результате работы ansible playbook на созданных ранее нодах разворачивается кластер kubernates.
+
+<image src="img/tbd" alt="kubectl get nodes">

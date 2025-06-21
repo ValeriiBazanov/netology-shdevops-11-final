@@ -1,0 +1,6 @@
+---
+- name: Copy the join command to server location
+  copy: src=../tmp/join-worker-node-command dest=/tmp/join-worker-node-command.sh mode=0777
+
+- name: Join the worker node to cluster 
+  command: sh /tmp/join-worker-node-command.sh

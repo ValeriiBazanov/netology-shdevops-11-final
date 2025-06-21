@@ -1,0 +1,6 @@
+---
+- name: Copy the join master node command to server location
+  copy: src=../tmp/join-master-node-command dest=/tmp/join-master-node-command.sh mode=0777
+
+- name: Join the master node to cluster
+  command: sh /tmp/join-master-node-command.sh

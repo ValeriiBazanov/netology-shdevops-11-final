@@ -1,0 +1,29 @@
+---
+- name: Install requirements
+  hosts: all
+  become: true
+  remote_user: ubuntu
+  roles:
+    - docker_install
+    - k8s_install
+
+- name: Create cluster
+  hosts: kube_control_plane_init
+  become: true
+  remote_user: ubuntu
+  roles:
+    - create_cluster
+
+- name: Worker node invite
+  hosts: kube_node
+  become: true
+  remote_user: ubuntu
+  roles:
+    - worker_node_invite
+
+- name: Master node invite
+  hosts: kube_control_plane !kube_control_plane_init
+  become: true
+  remote_user: ubuntu
+  roles:
+    - master_node_invite

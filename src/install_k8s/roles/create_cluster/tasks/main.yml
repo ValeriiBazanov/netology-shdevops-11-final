@@ -1,0 +1,37 @@
+---
+- name: Initialize the Kubernetes cluster using kubeadm
+  become_user: root
+  command: kubeadm init --control-plane-endpoint="{{ ansible_default_ipv4.address }}"
+
+- name: Alter permission 
+  shell: "{{ item }}"
+  become_user: ubuntu
+  with_items:
+   - mkdir -p $HOME/.kube
+   - sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+   - sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+- name: Install calico pod network
+  become: false
+  shell: "{{ item }}"
+  with_items:
+   - curl https://raw.githubusercontent.com/projectcalico/calico/v3.26.1/manifests/calico.yaml -O
+   - kubectl apply -f calico.yaml
+
+- name: Generate join worker node command
+  become_user: ubuntu
+  command: kubeadm token create --print-join-command
+  register: joinworker_node_command
+
+- name: Copy join worker node command to local file
+  become: false
+  local_action: copy content="{{ joinworker_node_command.stdout_lines[0] }}" dest="./../tmp/join-worker-node-command"
+
+- name: Generate join mester node command
+  become_user: ubuntu
+  shell: "kubeadm token create --print-join-command --certificate-key $(sudo kubeadm init phase upload-certs --upload-certs | sed -n '3p')"
+  register: join_master_node_command
+
+- name: Copy join master node command to local file
+  become: false
+  local_action: copy content="{{ join_master_node_command.stdout_lines[0] }}" dest="./../tmp/join-master-node-command"

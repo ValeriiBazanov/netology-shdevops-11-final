@@ -1,0 +1,73 @@
+---
+- name: Install docker dependencies
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - software-properties-common
+    state: present
+    update_cache: yes
+
+- name: Add docker GPG key
+  apt_key:
+    url: "{{ docker_gpg_key }}"
+    state: present
+
+- name: Add docker apt repository
+  apt_repository:
+    repo: "{{ docker_apt_repo }}"
+    state: present
+
+- name: Install docker
+  apt:
+    name: [docker-ce, docker-ce-cli, containerd.io]
+    state: latest
+    update_cache: yes
+
+- name: Enable and start docker
+  service:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: Allow ansible user to access docker socket
+  user:
+    name: "{{ ansible_user }}"
+    groups: docker
+    append: yes
+
+- name: Download docker compose
+  get_url:
+    url: "{{ docker_compose_url }}"
+    dest: "{{ docker_compose_dest }}"
+    mode: '0755'
+
+- name: Load modules
+  ansible.builtin.shell: |
+    modprobe overlay
+    modprobe br_netfilter
+
+- name: Set net.ipv4.ip_forward
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    state: present
+    reload: yes
+    sysctl_file: /etc/sysctl.d/k8s.conf
+
+- name: Set net.bridge.bridge-nf-call-iptables
+  ansible.posix.sysctl:
+    name: net.bridge.bridge-nf-call-iptables
+    value: '1'
+    state: present
+    reload: yes
+    sysctl_file: /etc/sysctl.d/k8s.conf
+
+- name: Set net.bridge.bridge-nf-call-ip6tables
+  ansible.posix.sysctl:
+    name: net.bridge.bridge-nf-call-ip6tables
+    value: '1'
+    state: present
+    reload: yes
+    sysctl_file: /etc/sysctl.d/k8s.conf

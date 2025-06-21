@@ -5,5 +5,5 @@ resource "local_file" "aws_credentials" {
         profile_name = var.profile_name
     }  )
 
-    filename = "${abspath(path.module)}/../../.aws/credentials"
+    filename = "${abspath(path.module)}/../tmp/credentials"
 }

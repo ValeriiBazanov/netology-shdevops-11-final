@@ -7,9 +7,10 @@ resource "local_file" "inventory_cfg" {
         worker_a = module.worker_nodes.final-work-subnet-a.vm
         worker_b = module.worker_nodes.final-work-subnet-b.vm
         worker_d = module.worker_nodes.final-work-subnet-d.vm
-        ip_nat = module.nat_vm.vm.0.network_interface.0.ip_address
+        ip_nat = module.nat_vm.vm.0.network_interface.0.nat_ip_address
+        master_init_name = module.master_nodes.final-work-subnet-a.vm.0.name
 
     }  )
 
-    filename = "${abspath(path.module)}../host.yml"
+    filename = "../tmp/host.yml"
 }
