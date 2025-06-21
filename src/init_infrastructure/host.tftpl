@@ -1,0 +1,107 @@
+all:
+  hosts:
+
+%{~ for i in master_a ~}
+    ${i["name"]}:
+      ansible_host:
+      ip: ${i["network_interface"][0]["ip_address"]}
+      ansible_user: ubuntu
+      ansible_ssh_common_args: -J ubuntu@${ip_nat}
+
+%{~ endfor ~}
+
+%{~ for i in master_b ~}
+    ${i["name"]}:
+      ansible_host:
+      ip: ${i["network_interface"][0]["ip_address"]}
+      ansible_user: ubuntu
+      ansible_ssh_common_args: -J ubuntu@${ip_nat}
+
+%{~ endfor ~}
+
+%{~ for i in master_d ~}
+    ${i["name"]}:
+      ansible_host:
+      ip: ${i["network_interface"][0]["ip_address"]}
+      ansible_user: ubuntu
+      ansible_ssh_common_args: -J ubuntu@${ip_nat}
+
+%{~ endfor ~}
+
+%{~ for i in worker_a ~}
+    ${i["name"]}:
+      ansible_host:
+      ip: ${i["network_interface"][0]["ip_address"]}
+      ansible_user: ubuntu
+      ansible_ssh_common_args: -J ubuntu@${ip_nat}
+
+%{~ endfor ~}
+
+%{~ for i in worker_b ~}
+    ${i["name"]}:
+      ansible_host:
+      ip: ${i["network_interface"][0]["ip_address"]}
+      ansible_user: ubuntu
+      ansible_ssh_common_args: -J ubuntu@${ip_nat}
+
+%{~ endfor ~}
+
+%{~ for i in worker_d ~}
+    ${i["name"]}:
+      ansible_host:
+      ip: ${i["network_interface"][0]["ip_address"]}
+      ansible_user: ubuntu
+      ansible_ssh_common_args: -J ubuntu@${ip_nat}
+
+%{~ endfor ~}
+kube_control_plane:
+  hosts: 
+
+%{~ for i in master_a ~}
+    ${i["name"]}:
+
+%{~ endfor ~}
+
+%{~ for i in master_b ~}
+    ${i["name"]}:
+
+%{~ endfor ~}
+
+%{~ for i in master_d ~}
+    ${i["name"]}:
+
+%{~ endfor ~}
+kube_node:
+  hosts:
+
+%{~ for i in worker_a ~}
+    ${i["name"]}:
+
+%{~ endfor ~}
+
+%{~ for i in worker_b ~}
+    ${i["name"]}:
+
+%{~ endfor ~}
+
+%{~ for i in worker_d ~}
+    ${i["name"]}:
+
+%{~ endfor ~}
+etcd:
+  hosts: 
+
+%{~ for i in master_a ~}
+    ${i["name"]}:
+
+%{~ endfor ~}
+
+%{~ for i in master_b ~}
+    ${i["name"]}:
+
+%{~ endfor ~}
+
+%{~ for i in master_d ~}
+    ${i["name"]}:
+
+%{~ endfor ~}

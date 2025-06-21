@@ -1,8 +1,3 @@
-data "template_file" "cloudinit" {
-  template = file("./cloud-init.yml")
-  vars = {public_key = var.public_key}
-}
-
 module "master_nodes" {
   for_each               = {for env in yandex_vpc_subnet.subnets : env.name => env}
   
@@ -18,6 +13,7 @@ module "master_nodes" {
   disk_size              = var.master_nodes_params.disk_size
   platform_id            = var.master_nodes_params.platform_id
   need_nat               = false 
+  security_group_ids     = [ yandex_vpc_security_group.nat_security_group.id ]
 
   labels = { 
     owner= "v.bazanov",
@@ -46,6 +42,7 @@ module "worker_nodes" {
   disk_size              = var.worker_nodes_params.disk_size
   platform_id            = var.worker_nodes_params.platform_id
   need_nat               = false 
+  security_group_ids     = [ yandex_vpc_security_group.nat_security_group.id ]
 
   labels = { 
     owner= "v.bazanov",

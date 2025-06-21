@@ -9,4 +9,4 @@ users:
 package_update: true
 package_upgrade: false
 packages:
- - vim
+  - vim

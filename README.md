@@ -32,6 +32,7 @@ terraform apply
 - profile - значение переменной profile_name указанное при выполнении скрипта /src/prepare_account. Текущее значение "finalwork".
 - bucket - значение переменной bucket_name указанное при выполнении скрипта /src/prepare_account. Текущее значение "terraform-backend-vbazanov-final".
 
+
 ### 3. Создаем ноды кластера kubernates
 
 [Директория с terraform скриптами](./src/init_infrastructure/)
@@ -43,10 +44,11 @@ terraform init
 terraform apply
 ```
 
-В результаты выполнения terraform скрипта создаются сеть, три подсети и виртуальные машины для мастер и рабочих нод.
+В результаты выполнения terraform скрипта создаются сеть, три подсети nat инстанс, виртуальные машины для мастер и рабочих нод. В директории src сформирован hosts.yml, который будет использоваться ansible для создания кластера kubernates.
 
 <image src="img/tbd" alt="Сеть">
 
 <image src="img/tbd" alt="Подсети">
 
 <image src="img/tbd" alt="Виртуальные машины">
+

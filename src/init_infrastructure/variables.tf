@@ -30,10 +30,20 @@ variable "network_name" {
   description = "Network name"
 }
 
-variable "nat_gateway_name" {
-  type        = string
-  default     = "finalwork-nat-gateway"
-  description = "NAT gateway name"
+variable "nat_subnet_params" {
+    type = object({ 
+        name = string, 
+        zone = string, 
+        cidr = list(string)
+    })
+
+    default = {
+        name = "final-work-subnet-nat",
+        zone = "ru-central1-a",
+        cidr = ["192.168.10.0/24"]
+    }
+    
+    description = "NAT subnet params"
 }
 
 variable "route_table_name" {
@@ -46,6 +56,12 @@ variable "route_table_destination_prefix" {
   type        = string
   default     = "0.0.0.0/0"
   description = "Route table destination prefix"
+}
+
+variable "security_group_name" {
+  type        = string
+  default     = "nat-security-group"
+  description = "Security group name"
 }
 
 variable "subnet_params" {
@@ -117,13 +133,47 @@ variable "worker_nodes_params" {
 
     default = {
         name = "worker", 
-        count = 3, 
-        cores = 2,
-        memory = 4,
+        count = 2, 
+        cores = 4,
+        memory = 8,
         core_fraction = 100,
         disk_size = 20,
         platform_id = "standard-v3"
     }
     
-    description = "Master node params"
+    description = "Worker node params"
+}
+
+variable "nat_image_family" {
+  type        = string
+  default     = "nat-instance-ubuntu"
+  description = "NAT image family id"
+}
+
+variable "nat_user_name" {
+  type        = string
+  default     = "ubuntu"
+  description = "NAT user"
+}
+
+variable "nat_vm_params" {
+    type = object({ 
+        name = string, 
+        cores = number,
+        memory = number,
+        core_fraction = number,
+        disk_size = number,
+        platform_id = string
+    })
+
+    default = {
+        name = "nat", 
+        cores = 2,
+        memory = 2,
+        core_fraction = 100,
+        disk_size = 20,
+        platform_id = "standard-v3"
+    }
+    
+    description = "NAT VM params"
 }
