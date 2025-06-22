@@ -1,6 +1,6 @@
 ---
-- name: Install requirements
-  hosts: all
+- name: Install k8s
+  hosts: all !admin_host
   become: true
   remote_user: ubuntu
   roles:
@@ -27,3 +27,10 @@
   remote_user: ubuntu
   roles:
     - master_node_invite
+
+- name: Prepare admin host
+  hosts: admin_host
+  become: true
+  remote_user: ubuntu
+  roles:
+    - admin_prepare

@@ -133,7 +133,7 @@ variable "worker_nodes_params" {
 
     default = {
         name = "worker", 
-        count = 2, 
+        count = 1, 
         cores = 4,
         memory = 8,
         core_fraction = 100,
@@ -176,4 +176,114 @@ variable "nat_vm_params" {
     }
     
     description = "NAT VM params"
+}
+
+variable "lb_target_group_params" {
+    type = object({ 
+        name = string, 
+        healthcheck_name = string,
+        healthcheck_port = number
+    })
+
+    default = {
+        name = "k8s-load-balancer-target-group", 
+        healthcheck_name = "tcp",
+        healthcheck_port = 22
+    }
+    
+    description = "K8s load balancer target group params"
+}
+
+variable "lb_target_master_group_params" {
+    type = object({ 
+        name = string, 
+        healthcheck_name = string,
+        healthcheck_port = number
+    })
+
+    default = {
+        name = "k8s-load-balancer-master-target-group", 
+        healthcheck_name = "tcp",
+        healthcheck_port = 22
+    }
+    
+    description = "K8s load balancer master target group params"
+}
+
+variable "lb_name" {
+  type        = string
+  default     = "k8s-load-balancer"
+  description = "K8s load balancer name"
+}
+
+variable "lb_listener_params" {
+    type = list(object({ 
+        name = string, 
+        port = number,
+        target_port = number,
+        ip_version = string
+    }))
+
+    default = [ {
+        name = "web-app", 
+        port = 9090,
+        target_port = 9090,
+        ip_version = "ipv4"
+    } ]
+    
+    description = "K8s load balancer listener params"
+}
+
+variable "nat_security_group_egress_params" {
+    type = list(object({ 
+        protocol = string, 
+        description = string, 
+        cidr = list(string)
+    }))
+
+    default = [ {
+        protocol = "ANY",
+        description = "any",
+        cidr = ["0.0.0.0/0"]
+    } ]
+    
+    description = "NAT security group egress params"
+}
+
+variable "nat_security_group_ingress_params" {
+    type = list(object({ 
+        protocol = string, 
+        description = string, 
+        cidr = list(string)
+    }))
+
+    default = [ {
+        protocol = "ANY",
+        description = "any",
+        cidr = ["0.0.0.0/0"]
+    } ]
+    
+    description = "NAT security group ingress params"
+}
+
+variable "admin_vm_params" {
+    type = object({ 
+        name = string, 
+        cores = number,
+        memory = number,
+        core_fraction = number,
+        disk_size = number,
+        platform_id = string
+    })
+
+    default = {
+        name = "admin", 
+        cores = 2,
+        memory = 2,
+        core_fraction = 100,
+        disk_size = 20,
+        platform_id = "standard-v3"
+    }
+    
+    description = "Admin VM params"
 }

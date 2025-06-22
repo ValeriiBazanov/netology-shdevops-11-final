@@ -9,7 +9,7 @@ resource "local_file" "inventory_cfg" {
         worker_d = module.worker_nodes.final-work-subnet-d.vm
         ip_nat = module.nat_vm.vm.0.network_interface.0.nat_ip_address
         master_init_name = module.master_nodes.final-work-subnet-a.vm.0.name
-
+        admin_vm = module.admin_vm.vm
     }  )
 
     filename = "../tmp/host.yml"

@@ -1,0 +1,39 @@
+---
+- name: Install k8s dependencies
+  apt:
+    name: 
+      - ca-certificates
+      - curl
+      - apt-transport-https
+    state: present
+    update_cache: yes
+
+- name: Disable swap
+  ansible.builtin.command: swapoff -a
+ 
+- name: Create folder for keyrings
+  become: true
+  ansible.builtin.shell: mkdir /etc/apt/keyrings | sudo chmod 777 /etc/apt/keyrings
+
+- name: Add gpg key
+  apt_key:
+    url: "{{ k8s_gpg_key }}"
+    state: present
+    keyring: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+- name: Add repository
+  apt_repository: 
+    repo: "{{ k8s_apt_repo }}"
+    state: present
+
+- name: Install kubectl
+  apt:
+    name:
+      - kubectl
+
+- name: Create .kube directory
+  ansible.builtin.shell: |
+    mkdir -p /home/ubuntu/.kube
+
+- name: Copy config file to admin
+  copy: src=../tmp/config dest=/home/ubuntu/.kube/config

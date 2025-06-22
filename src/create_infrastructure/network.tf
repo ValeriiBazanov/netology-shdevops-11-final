@@ -52,16 +52,24 @@ resource "yandex_vpc_security_group" "nat_security_group" {
   name       = var.security_group_name
   network_id = yandex_vpc_network.network.id
 
-  egress {
-    protocol       = "ANY"
-    description    = "any"
-    v4_cidr_blocks = ["0.0.0.0/0"]
+  dynamic "egress" {
+    for_each = { for env in var.nat_security_group_egress_params : env.description => env }
+
+    content {
+      protocol       = egress.value.protocol
+      description    = egress.value.description
+      v4_cidr_blocks = egress.value.cidr
+    }
   }
-  
-  ingress {
-    protocol       = "ANY"
-    description    = "any"
-    v4_cidr_blocks = ["0.0.0.0/0"]
+
+  dynamic "ingress" {
+    for_each = { for env in var.nat_security_group_ingress_params : env.description => env }
+
+    content {
+      protocol       = ingress.value.protocol
+      description    = ingress.value.description
+      v4_cidr_blocks = ingress.value.cidr
+    }
   }
 }
 

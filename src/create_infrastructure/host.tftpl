@@ -54,6 +54,13 @@ all:
       ansible_ssh_common_args: -J ubuntu@${ip_nat}
 
 %{~ endfor ~}
+
+%{~ for i in admin_vm ~}
+    ${i["name"]}:
+      ansible_host: ${i["network_interface"][0]["nat_ip_address"]}
+      ansible_user: ubuntu
+
+%{~ endfor ~}
 kube_control_plane_init:
   hosts: 
     ${master_init_name}:
@@ -88,6 +95,13 @@ kube_node:
 %{~ endfor ~}
 
 %{~ for i in worker_d ~}
+    ${i["name"]}:
+
+%{~ endfor ~}
+admin_host:
+  hosts:
+
+%{~ for i in admin_vm ~}
     ${i["name"]}:
 
 %{~ endfor ~}
