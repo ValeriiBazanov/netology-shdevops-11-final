@@ -226,8 +226,8 @@ variable "lb_listener_params" {
 
     default = [ {
         name = "web-app", 
-        port = 9090,
-        target_port = 9090,
+        port = 80,
+        target_port = 30080,
         ip_version = "ipv4"
     } ]
     

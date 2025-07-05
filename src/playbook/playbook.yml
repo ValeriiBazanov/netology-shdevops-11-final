@@ -34,3 +34,10 @@
   remote_user: ubuntu
   roles:
     - admin_prepare
+
+- name: Install kubernates env (ingress-controller, monitoring)
+  hosts: admin_host
+  become: true
+  remote_user: ubuntu
+  roles:
+    - kubernater_env

@@ -5,9 +5,7 @@
 Группа: SHDEVOPS-11
 
 
-## Создание облачной инфраструктуры
-
-### 1. Создаем сервисный аккаунт и бакет для хранения tfstate файла
+## 1. Создаем сервисный аккаунт и бакет для хранения tfstate файла
 
 [Директория с terraform скриптами](./src/prepare_account/)
 
@@ -24,8 +22,10 @@ terraform apply
 
 <image src="img/bucket.png" alt="Bucket">
 
+<image src="img/registry.png" alt="Registry">
 
-### 2. Создаем ноды кластера kubernates
+
+## 2. Создаем ноды кластера kubernates
 
 В скрипте /src/create_infrastructure/providers.tf устанавлены следующие значения для параметров из блока terraform/backend:
 - shared_credentials_files - ссылка на credential файл сгенерированный в пункте 1. Текущее значение "../tmp/credentials".
@@ -52,17 +52,88 @@ terraform apply
 <image src="img/tbd" alt="Балансировщик нагрузки">
 
 
-### 3. Устанавливаем кластер kubernates
+## 3. Устанавливаем кластер kubernates
 
-[Ansible playbook](./src/install_k8s/playbook.yml)
+[Ansible playbook](./src/playbook/playbook.yml)
 
-Переходим в директорию /src/install_k8s и запускаем ansible playbook для создания кластера kubernates.
+Переходим в директорию /src/playbook и запускаем ansible playbook для создания кластера kubernates и установки окружения (ingress-контроллер, компоненты мониторинга).
 
 ```
 ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ../tmp/host.yml playbook.yml --become --flush-cache
 ```
 
-В результате работы ansible playbook на созданных ранее нодах разворачивается кластер kubernates. 
-Доступ к kubectl настроен на машине администратора. Конфиг-файл скопирован в директорию "~/.kube/".
+
+### 3.1 Установка окружения для создания кластера kubernates
+
+Запускаются ansible роли:
+
+- [docker_install](./src/playbook/roles/docker_install/tasks/main.yml)
+- [k8s_install](./src/playbook/roles/k8s_install/tasks/main.yml)
+
+На master и worker нодах устанавливаются docker, docker-compose, kubeadm, kubelet, kubectl.
+
+
+### 3.2 Создание кластера kubernates
+
+Запускается ansible роль:
+
+- [create_cluster](./src/playbook/roles/create_cluster/tasks/main.yml)
+
+На одной из master нод при помощи kubeadm инициируется кластер kubernates, устанавливается calico, генерируются команды подключения workert и master нод и копируется kubectl config для машины администратора.
+
+
+### 3.3 Подключаются worker-ноды к кластеру
+
+Запускается ansible роль:
+
+- [worker_node_invite](./src/playbook/roles/worker_node_invite/tasks/main.yml)
+
+На worker-нодах выполняется команда подключения к кластеру kubernates.
+
+
+### 3.4 Подключаются master-ноды к кластеру
+
+Запускается ansible роль:
+
+- [master_node_invite](./src/playbook/roles/master_node_invite/tasks/main.yml)
+
+На master-нодах выполняется команда подключения к кластеру kubernates.
+
+
+### 3.5 Настройка окружения машины администратора
+
+Запускается ansible роль:
+
+- [admin_prepare](./src/playbook/roles/admin_prepare/tasks/main.yml)
+
+На машине администратора устанавливается kubectl и копируется config-файл в директорию "~/.kube". 
+Успешный вывод команды запроса нод кластера.
+
+```
+kubectl get nodes
+```
 
 <image src="img/tbd" alt="kubectl get nodes">
+
+
+### 3.6 Установка окружения для кластера kubernates
+
+Запускается ansible роль:
+
+- [kubernater_env](./src/playbook/roles/kubernater_env/tasks/main.yml)
+
+1. На машине администратора запускаются манифест установки ingress-контроллера. [ingress-controller.yaml](./src/manifests/ingress-controller.yaml).
+2. Клонируется репозиторий kube-prometeus и заменяются /kube-prometeus/manifests/[grafana-config.yaml](./src/manifests/grafana-config.yaml) и /kube-prometeus/manifests/[grafana-networkPolicy.yaml](./src/manifests/grafana-networkPolicy.yaml).
+3. Выполняется установка kube-prometeus, обновление [deployment-grafana](./src/manifests/grafana-deployment-path.yaml) и настройка [ingress-grafana](./src/manifests/ingress-grafana.yaml).
+
+```
+kubectl apply --server-side -f manifests/setup
+kubectl wait --for condition=Established --all CustomResourceDefinition --namespace=monitoring
+kubectl apply -f manifests
+kubectl patch deployment -n monitoring grafana --patch-file grafana-deployment-path.yaml
+kubectl apply -f ingress-grafana.yaml
+```
+
+Grafana доступна по адресу http://bazanovvv.ru/grafana/ . Для возможности подключения по имени bazanovvv.ru добавил правило в файл "/etc/hosts": \<ip load balancer\> bazanovvv.ru.
+
+<image src="img/tbd" alt="grafana">

@@ -44,3 +44,8 @@ resource "yandex_storage_bucket" "bucket_terraform_backend" {
   }
   depends_on = [ yandex_resourcemanager_folder_iam_member.service_account_role ]
 }
+
+resource "yandex_container_registry" "finalwork_registry" {
+  name      = var.registry_name
+  folder_id = var.folder_id
+}
