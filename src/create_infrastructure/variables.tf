@@ -134,8 +134,8 @@ variable "worker_nodes_params" {
     default = {
         name = "worker", 
         count = 1, 
-        cores = 4,
-        memory = 8,
+        cores = 2,
+        memory = 4,
         core_fraction = 100,
         disk_size = 20,
         platform_id = "standard-v3"
