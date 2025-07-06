@@ -219,3 +219,67 @@ Web-страница доступна по адресу http://bazanovvv.ru
 Grafana доступна по адресу http://bazanovvv.ru/grafana/ 
 
 <image src="img/grafana.png" alt="grafana">
+
+
+## 6. Настраиваем CI/CD приложения
+
+Используем GitHub Actions.
+Ссылка на репозиторий: https://github.com/ValeriiBazanov/netology-final-app
+Ссылка на Actions: https://github.com/ValeriiBazanov/netology-final-app/actions
+
+
+### 6.1 Добавляем секреты
+
+Переходим на вкладку Settings и выбираем в блоке Security пункт Secret and variables/Actions.
+Добавляем 2 секрета: 
+- REGISTRY_ID - значение registry_id созданного в пункте 1 Yandex container registry ("crp0b37t567tu9eml326") для хранения собираемых образов
+- YC_SERVICE_ACCOUNT_KEY - сгенерированный в пункте 2.1 токен для публикации собранных образов в registry.
+
+<image src="img/secret_app.png" alt="Secrets">
+
+
+### 6.2 Создаем Runner
+
+Так как доступ к kubectl осуществляется с машины администратора настроим Runner на этой машине чтобы обновлять версию приложения в кластере kubernates.
+Переходим на вкладку Settings и выбираем в блоке Code and automations пункт Actions/Runners. Нажимаем на кнопку "New self-hosted runner". 
+
+<image src="img/runner_comand_app.png" alt="New self-hosted runner comand">
+
+Команды на появившейся странице выполняем на машине администратора.
+
+<image src="img/admin_runner.png" alt="Run command on admin VM">
+
+Новый runner отображается на странице.
+
+<image src="img/runner_app.png" alt="Runners">
+
+
+### 6.3 Добавляем пайплайн в репозиторий
+
+https://github.com/ValeriiBazanov/netology-final-app/blob/main/.github/workflows/build.yml
+
+
+### 6.4 Вносим изменения в репозиторий и публикуем тег
+
+
+Ссылка на коммит: https://github.com/ValeriiBazanov/netology-final-app/commit/0bffcc7d52e178d6c06329fc0ad1c97d6bd4448f
+
+Выполняем команду добавления тега.
+
+```
+git tag -a release-4.0 -m "release version 4.0"
+git push origin release-4.0
+```
+
+Ссылка на тег: https://github.com/ValeriiBazanov/netology-final-app/tree/release-4.0
+Запускается и выполняется сборка: https://github.com/ValeriiBazanov/netology-final-app/actions/runs/16101585870
+
+<image src="img/build_app.png" alt="Build and deploy">
+
+Образ опубликован в registry:
+
+<image src="img/registry_app.png" alt="Image in registry">
+
+Приложение в кластере kubernates обновлено:
+
+<image src="img/new_app.png" alt="App">
