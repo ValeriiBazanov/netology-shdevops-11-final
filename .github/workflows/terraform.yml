@@ -1,0 +1,63 @@
+name: Terraform Infrastructure
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'src/create_infrastructure/**'
+      - '.github/workflows/terraform.yaml'
+
+jobs:
+  terraform:
+    name: Terraform Plan/Apply
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./src/create_infrastructure
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.11.4
+
+      - name: Create YC auth key file
+        run: |
+          cat <<EOF > ~/.yc_authorized_key.json
+          ${{ secrets.YC_SERVICE_ACCOUNT_KEY }}
+          EOF
+          chmod 600 ~/.yc_authorized_key.json
+
+      - name: Create TF vars file
+        run: |
+          cat <<EOF > main.auto.tfvars
+          ${{ secrets.TF_VARS }}
+          EOF
+
+      - name: Debug files
+        run: |
+          ls -la
+          cat ~/.yc_authorized_key.json
+          cat main.auto.tfvars
+
+      - name: Terraform Init
+        env:
+          YC_SERVICE_ACCOUNT_KEY_FILE: ~/.yc_authorized_key.json
+        run: |
+          terraform init -reconfigure \
+            -backend-config="access_key=${{ secrets.YC_S3_ACCESS_KEY }}" \
+            -backend-config="secret_key=${{ secrets.YC_S3_SECRET_KEY }}"
+            
+      - name: Terraform Format
+        run: terraform fmt -check
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Apply
+        run: |
+          terraform apply -auto-approve \
+            -var-file=main.auto.tfvars \
+            -var="allow_stopping_for_update=true" 
