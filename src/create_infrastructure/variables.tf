@@ -135,7 +135,7 @@ variable "worker_nodes_params" {
         name = "worker", 
         count = 1, 
         cores = 2,
-        memory = 4,
+        memory = 6,
         core_fraction = 100,
         disk_size = 20,
         platform_id = "standard-v3"
