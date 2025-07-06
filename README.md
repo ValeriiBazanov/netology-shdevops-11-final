@@ -99,9 +99,10 @@ cr.yandex/crp0b37t567tu9eml326/netology-final-app:release-1.0
 ## 3. Создаем ноды кластера kubernates
 
 В скрипте /src/create_infrastructure/providers.tf устанавлены следующие значения для параметров из блока terraform/backend:
-- shared_credentials_files - ссылка на credential файл сгенерированный в пункте 1. Текущее значение "../tmp/credentials".
 - profile - значение переменной profile_name указанное при выполнении скрипта /src/prepare_account. Текущее значение "finalwork".
 - bucket - значение переменной bucket_name указанное при выполнении скрипта /src/prepare_account. Текущее значение "terraform-backend-vbazanov-final".
+
+Файл /src/tmp/credentials необходимо разместить по пути ~/.aws/.
 
 [Директория с terraform скриптами](./src/create_infrastructure/)
 
@@ -283,3 +284,45 @@ git push origin release-4.0
 Приложение в кластере kubernates обновлено:
 
 <image src="img/new_app.png" alt="App">
+
+
+## 7. Настраиваем CI/CD инфраструктуры
+
+Используем GitHub Actions.
+Ссылка на репозиторий: https://github.com/ValeriiBazanov/netology-shdevops-11-final
+Ссылка на Actions: https://github.com/ValeriiBazanov/netology-shdevops-11-final/actions
+
+
+### 7.1 Добавляем секреты
+
+Переходим на вкладку Settings и выбираем в блоке Security пункт Secret and variables/Actions.
+Добавляем 2 секрета: 
+- TF_VARS - значения настроек token, cloud_id, folder_id, public_key
+- YC_SA_CREDENTIALS - сгенерированный в пункте 1 файл /src/tmp/credentials
+
+<image src="img/secret_infra.png" alt="Secrets">
+
+
+### 7.2 Добавляем пайплайн в репозиторий
+
+https://github.com/ValeriiBazanov/netology-shdevops-11-final/blob/main/.github/workflows/terraform.yml
+
+
+### 7.3 Вносим изменения в репозиторий
+
+
+Ссылка на коммит: https://github.com/ValeriiBazanov/netology-shdevops-11-final/commit/0b5825e187db1d2079dbb69214eab1364ae42ace
+
+Запускается и выполняется сборка: https://github.com/ValeriiBazanov/netology-shdevops-11-final/actions/runs/16102341114
+
+<image src="img/build_infra.png" alt="Build">
+
+Изменяются значения ЦПУ и RAM worker нод. Ip адреса отличаются от машин созданных в пункте 3, так как инфраструктура между заданиями пересоздавалась.
+
+До изменений:
+
+<image src="img/before_infra.png" alt="Before">
+
+После изменений:
+
+<image src="img/after_infra.png" alt="After">
