@@ -22,12 +22,17 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.8.4
+      
+      - name: Create dir .asw
+        run: |
+          mkdir ~/.aws
 
       - name: Configure AWS Credentials  
         run: |
-          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY }} 
-          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_KEY }}
-
+          cat <<EOF > ~/.aws/credentials
+          ${{ secrets.YC_SA_CREDENTIALS }}
+          EOF
+      
       - name: Create TF vars file
         run: |
           cat <<EOF > main.auto.tfvars
