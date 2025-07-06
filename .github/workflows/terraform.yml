@@ -25,10 +25,9 @@ jobs:
 
       - name: Create credentials file
         run: |
-          cat <<EOF > ./src/tmp/credentials
+          cat <<EOF > .aws/credentials
           ${{ secrets.YC_SA_CREDENTIALS }}
           EOF
-          chmod 600 ./src/tmp/credentials
 
       - name: Create TF vars file
         run: |
@@ -38,7 +37,8 @@ jobs:
 
       - name: Terraform Init
         run: |
-          terraform init
+          terraform init -reconfigure \
+            -backend-config="shared_credentials_files=.aws/credentials"
 
       - name: Terraform Validate
         run: terraform validate
