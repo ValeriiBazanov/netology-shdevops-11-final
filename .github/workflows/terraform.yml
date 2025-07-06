@@ -23,12 +23,12 @@ jobs:
         with:
           terraform_version: 1.8.4
 
-      - name: Create YC auth key file
+      - name: Create credentials file
         run: |
-          cat <<EOF > ~/.yc_authorized_key.json
-          ${{ secrets.YC_SERVICE_ACCOUNT_KEY }}
+          cat <<EOF > ../tmp/credentials
+          ${{ secrets.YC_SA_CREDENTIALS }}
           EOF
-          chmod 600 ~/.yc_authorized_key.json
+          chmod 600 ../tmp/credentials
 
       - name: Create TF vars file
         run: |
@@ -36,15 +36,7 @@ jobs:
           ${{ secrets.TF_VARS }}
           EOF
 
-      - name: Debug files
-        run: |
-          ls -la
-          cat ~/.yc_authorized_key.json
-          cat main.auto.tfvars
-
       - name: Terraform Init
-        env:
-          YC_SERVICE_ACCOUNT_KEY_FILE: ~/.yc_authorized_key.json
         run: |
           terraform init
 
@@ -53,6 +45,4 @@ jobs:
 
       - name: Terraform Apply
         run: |
-          terraform apply -auto-approve \
-            -var-file=main.auto.tfvars \
-            -var="allow_stopping_for_update=true" 
+          terraform apply -auto-approve 
