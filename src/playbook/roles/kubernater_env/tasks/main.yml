@@ -29,3 +29,14 @@
    - kubectl apply -f /home/ubuntu/kube-prometeus/manifests
    - kubectl patch deployment -n monitoring grafana --patch-file /home/ubuntu/manifests/grafana-deployment-path.yaml
    - kubectl apply -f /home/ubuntu/manifests/ingress-grafana.yaml
+
+- name: Copy registry key
+  copy: src=../tmp/registry_sa_key.json dest=/home/ubuntu/registry_sa_key.json
+
+- name: Run manifest to create web app
+  become: false
+  shell: "{{ item }}"
+  with_items:
+   - kubectl create namespace web
+   - kubectl create secret docker-registry yandex-registry-secret --docker-server=cr.yandex --docker-username=json_key --docker-password="$(cat registry_sa_key.json)" -n web
+   - kubectl apply -f manifests/web-deployment.yaml

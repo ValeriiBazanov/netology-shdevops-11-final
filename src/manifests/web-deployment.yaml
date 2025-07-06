@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: netology-final-app
+  namespace: web
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: netology-final-app
+  template:
+    metadata:
+      labels:
+        app: netology-final-app
+    spec:
+      containers:
+      - name: netology-final-app
+        image: cr.yandex/crp0b37t567tu9eml326/netology-final-app:release-1.0
+        ports:
+        - containerPort: 80
+      imagePullSecrets:
+      - name: yandex-registry-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: netology-final-app-svc
+  namespace: web
+spec:
+  ports:
+  - name: netology-final-app
+    port: 8080
+    targetPort: 80
+  type: NodePort
+  selector:
+    app: netology-final-app
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: netology-final-ingress
+  namespace: web
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: bazanovvv.ru
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: netology-final-app-svc
+            port:
+              number: 8080

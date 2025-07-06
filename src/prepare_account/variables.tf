@@ -32,7 +32,7 @@ variable "service_account_name" {
 
 variable "service_account_roles" {
   type        = list(string)
-  default     = ["storage.editor", "kms.keys.encrypter", "kms.keys.decrypter", "container-registry.images.pusher"]
+  default     = ["storage.editor", "kms.keys.encrypter", "kms.keys.decrypter", "container-registry.images.pusher", "container-registry.images.puller"]
   description = "Service account cloud admin roles"
 }
 

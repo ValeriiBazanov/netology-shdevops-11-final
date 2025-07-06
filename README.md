@@ -38,6 +38,26 @@ service_account_id = "ajedibtch1dcrb462697"
 
 Создан репозиторий на GitHub с html-страницей и dockerfile с сборкой nginx-приложения которое будет отдавать статичную html-страницу: https://github.com/ValeriiBazanov/netology-final-app
 
+
+### 2.1 Создаем iam-токен
+
+Создаем iam токен и сохраняем его в директорию tmp для последующего использования в секрете. Запускаем команду в директории /src.
+
+```
+yc iam key create --service-account-id ${service_account_id} --output tmp/registry_sa_key.json
+```
+
+Подставляем service-account-id, созданного в пункте 1 ("ajedibtch1dcrb462697").
+
+```
+yc iam key create --service-account-id ajedibtch1dcrb462697 --output tmp/registry_sa_key.json
+```
+
+<image src="img/iam.png" alt="IAM token creation">
+
+
+### 2.2 Публикуем образ в yanex container registry
+
 Собираем образ и пушим в container registry.
 
 ```
@@ -57,6 +77,23 @@ docker push cr.yandex/crp0b37t567tu9eml326/netology-final-app:release-1.0
 <image src="img/build_and_push.png" alt="Build and push container">
 
 <image src="img/container_registry.png" alt="Container registry">
+
+
+### 2.3 Дорабатываем манифест развертывания приложения в kubernates
+
+Необходимо указать в манифесте deployment приложения [netology-final-app](./src/manifests/web-deployment.yaml) registry id, который был создан в пункте 1 ("crp0b37t567tu9eml326"), в блоке spec/template/spec/containers/image.
+
+```
+cr.yandex/${registry_id}/netology-final-app:release-1.0
+```
+
+Подставляем значение.
+
+```
+cr.yandex/crp0b37t567tu9eml326/netology-final-app:release-1.0
+```
+
+<image src="img/app_deployment.png" alt="Deployment netology-final-app">
 
 
 ## 3. Создаем ноды кластера kubernates
@@ -161,15 +198,20 @@ kubectl get nodes
 1. На машине администратора запускаются манифест установки ingress-контроллера. [ingress-controller.yaml](./src/manifests/ingress-controller.yaml).
 2. Клонируется репозиторий kube-prometeus и заменяются /kube-prometeus/manifests/[grafana-config.yaml](./src/manifests/grafana-config.yaml) и /kube-prometeus/manifests/[grafana-networkPolicy.yaml](./src/manifests/grafana-networkPolicy.yaml).
 3. Выполняется установка kube-prometeus, обновление [deployment-grafana](./src/manifests/grafana-deployment-path.yaml) и настройка [ingress-grafana](./src/manifests/ingress-grafana.yaml).
+4. Выполняется установка приложения, опубликованного в yandex container registry в пункте 2. Создается namespase web, secret yandex-registry-secret и выполняется манифест [netology-final-app](./src/manifests/web-deployment.yaml).
 
-```
-kubectl apply --server-side -f manifests/setup
-kubectl wait --for condition=Established --all CustomResourceDefinition --namespace=monitoring
-kubectl apply -f manifests
-kubectl patch deployment -n monitoring grafana --patch-file grafana-deployment-path.yaml
-kubectl apply -f ingress-grafana.yaml
-```
 
-Grafana доступна по адресу http://bazanovvv.ru/grafana/ . Для возможности подключения по имени bazanovvv.ru добавил правило в файл "/etc/hosts": \<ip load balancer\> bazanovvv.ru.
+## 5. Подключаемся к web-приложению и grafana
+
+Для возможности подключения по имени bazanovvv.ru к web-приложению и grafana добавил правило в файл "/etc/hosts": \<ip load balancer\> bazanovvv.ru.
+
+<image src="img/tbd" alt="hosts">
+
+
+Web-страница доступна по адресу http://bazanovvv.ru
+
+<image src="img/tbd" alt="web-app">
+
+Grafana доступна по адресу http://bazanovvv.ru/grafana/ 
 
 <image src="img/tbd" alt="grafana">
