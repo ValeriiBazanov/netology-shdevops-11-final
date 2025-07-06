@@ -25,10 +25,10 @@ jobs:
 
       - name: Create credentials file
         run: |
-          cat <<EOF > ../tmp/credentials
+          cat <<EOF > ./src/tmp/credentials
           ${{ secrets.YC_SA_CREDENTIALS }}
           EOF
-          chmod 600 ../tmp/credentials
+          chmod 600 ./src/tmp/credentials
 
       - name: Create TF vars file
         run: |
