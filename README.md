@@ -5,7 +5,7 @@
 Группа: SHDEVOPS-11
 
 
-## 1. Создаем сервисный аккаунт и бакет для хранения tfstate файла
+## 1. Создаем сервисный аккаунт, бакет для хранения tfstate файла и registry для хранения образов.
 
 [Директория с terraform скриптами](./src/prepare_account/)
 
@@ -16,7 +16,16 @@ terraform init
 terraform apply
 ```
 
-В результаты выполнения terraform скрипта создаются сервисный аккаунт, бакет для хранения tfstate файла и файл конфигураций в директории проекта "src/tmp/credentials".
+В результаты выполнения terraform скрипта создаются сервисный аккаунт, бакет для хранения tfstate файла, registry для хранения образов и файл конфигураций в директории проекта "src/tmp/credentials".
+
+terraform output:
+```
+bucket_name = "terraform-backend-vbazanov-final"
+registry_id = "crp0b37t567tu9eml326"
+sa_access_key = <sensitive>
+sa_secret_key = <sensitive>
+service_account_id = "ajedibtch1dcrb462697"
+```
 
 <image src="img/service_account.png" alt="Сервисный аккаунт">
 
@@ -25,7 +34,32 @@ terraform apply
 <image src="img/registry.png" alt="Registry">
 
 
-## 2. Создаем ноды кластера kubernates
+## 2. Создаем веб-приложение и загружаем образ в container registry
+
+Создан репозиторий на GitHub с html-страницей и dockerfile с сборкой nginx-приложения которое будет отдавать статичную html-страницу: https://github.com/ValeriiBazanov/netology-final-app
+
+Собираем образ и пушим в container registry.
+
+```
+yc container registry configure-docker
+docker build -t cr.yandex/${registry_id}/netology-final-app:release-1.0 .
+docker push cr.yandex/${registry_id}/netology-final-app:release-1.0
+```
+
+Подставляем registry_id container registry созданного в пункте 1 ("crp0b37t567tu9eml326")
+
+```
+yc container registry configure-docker
+docker build -t cr.yandex/crp0b37t567tu9eml326/netology-final-app:release-1.0 .
+docker push cr.yandex/crp0b37t567tu9eml326/netology-final-app:release-1.0
+```
+
+<image src="img/build_and_push.png" alt="Build and push container">
+
+<image src="img/container_registry.png" alt="Container registry">
+
+
+## 3. Создаем ноды кластера kubernates
 
 В скрипте /src/create_infrastructure/providers.tf устанавлены следующие значения для параметров из блока terraform/backend:
 - shared_credentials_files - ссылка на credential файл сгенерированный в пункте 1. Текущее значение "../tmp/credentials".
@@ -51,8 +85,10 @@ terraform apply
 
 <image src="img/tbd" alt="Балансировщик нагрузки">
 
+<image src="img/tbd" alt="tfstate файл в bucket">
 
-## 3. Устанавливаем кластер kubernates
+
+## 4. Устанавливаем кластер kubernates
 
 [Ansible playbook](./src/playbook/playbook.yml)
 
@@ -63,7 +99,7 @@ ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ../tmp/host.yml playbook.yml
 ```
 
 
-### 3.1 Установка окружения для создания кластера kubernates
+### 4.1 Устанавливаем окружение для создания кластера kubernates
 
 Запускаются ansible роли:
 
@@ -73,7 +109,7 @@ ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ../tmp/host.yml playbook.yml
 На master и worker нодах устанавливаются docker, docker-compose, kubeadm, kubelet, kubectl.
 
 
-### 3.2 Создание кластера kubernates
+### 4.2 Создаем кластер kubernates
 
 Запускается ansible роль:
 
@@ -82,7 +118,7 @@ ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ../tmp/host.yml playbook.yml
 На одной из master нод при помощи kubeadm инициируется кластер kubernates, устанавливается calico, генерируются команды подключения workert и master нод и копируется kubectl config для машины администратора.
 
 
-### 3.3 Подключаются worker-ноды к кластеру
+### 4.3 Подключаем worker-ноды к кластеру
 
 Запускается ansible роль:
 
@@ -91,7 +127,7 @@ ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ../tmp/host.yml playbook.yml
 На worker-нодах выполняется команда подключения к кластеру kubernates.
 
 
-### 3.4 Подключаются master-ноды к кластеру
+### 4.4 Подключаем master-ноды к кластеру
 
 Запускается ansible роль:
 
@@ -100,7 +136,7 @@ ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ../tmp/host.yml playbook.yml
 На master-нодах выполняется команда подключения к кластеру kubernates.
 
 
-### 3.5 Настройка окружения машины администратора
+### 4.5 Настраиваем окружение машины администратора
 
 Запускается ansible роль:
 
@@ -116,7 +152,7 @@ kubectl get nodes
 <image src="img/tbd" alt="kubectl get nodes">
 
 
-### 3.6 Установка окружения для кластера kubernates
+### 4.6 Устанавливаем окружение для кластера kubernates
 
 Запускается ansible роль:
 
