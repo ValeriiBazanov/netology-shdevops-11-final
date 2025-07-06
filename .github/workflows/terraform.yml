@@ -23,11 +23,11 @@ jobs:
         with:
           terraform_version: 1.8.4
 
-      - name: Create credentials file
-        run: |
-          cat <<EOF > credentials
-          ${{ secrets.YC_SA_CREDENTIALS }}
-          EOF
+      - name: Configure AWS Credentials  
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }} 
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
 
       - name: Create TF vars file
         run: |
@@ -38,7 +38,7 @@ jobs:
       - name: Terraform Init
         run: |
           terraform init -reconfigure \
-            -backend-config="shared_credentials_files=credentials"
+            -backend-config="profile=default"
 
       - name: Terraform Validate
         run: terraform validate
