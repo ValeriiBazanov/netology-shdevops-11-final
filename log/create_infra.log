@@ -1,0 +1,987 @@
+[0m[1mdata.template_file.cloudinit: Reading...[0m[0m
+[0m[1mdata.template_file.cloudinit: Read complete after 0s [id=ca2e99575f2a694b0a1b0a9fb0da1b90119ca233592cf11ed03d741d9af1b0bb][0m
+[0m[1mmodule.nat_vm.data.yandex_compute_image.vm_image: Reading...[0m[0m
+[0m[1mmodule.admin_vm.data.yandex_compute_image.vm_image: Reading...[0m[0m
+[0m[1mmodule.nat_vm.data.yandex_compute_image.vm_image: Read complete after 0s [id=fd8ai3a41vbqhmc7dbvb][0m
+[0m[1mmodule.admin_vm.data.yandex_compute_image.vm_image: Read complete after 0s [id=fd8lkfom0r94aa74gfg0][0m
+[0m[1mmodule.master_nodes["final-work-subnet-b"].data.yandex_compute_image.vm_image: Reading...[0m[0m
+[0m[1mmodule.worker_nodes["final-work-subnet-d"].data.yandex_compute_image.vm_image: Reading...[0m[0m
+[0m[1mmodule.worker_nodes["final-work-subnet-a"].data.yandex_compute_image.vm_image: Reading...[0m[0m
+[0m[1mmodule.master_nodes["final-work-subnet-a"].data.yandex_compute_image.vm_image: Reading...[0m[0m
+[0m[1mmodule.master_nodes["final-work-subnet-d"].data.yandex_compute_image.vm_image: Reading...[0m[0m
+[0m[1mmodule.worker_nodes["final-work-subnet-b"].data.yandex_compute_image.vm_image: Reading...[0m[0m
+[0m[1mmodule.worker_nodes["final-work-subnet-a"].data.yandex_compute_image.vm_image: Read complete after 0s [id=fd8lkfom0r94aa74gfg0][0m
+[0m[1mmodule.worker_nodes["final-work-subnet-b"].data.yandex_compute_image.vm_image: Read complete after 0s [id=fd8lkfom0r94aa74gfg0][0m
+[0m[1mmodule.master_nodes["final-work-subnet-b"].data.yandex_compute_image.vm_image: Read complete after 0s [id=fd8lkfom0r94aa74gfg0][0m
+[0m[1mmodule.master_nodes["final-work-subnet-d"].data.yandex_compute_image.vm_image: Read complete after 0s [id=fd8lkfom0r94aa74gfg0][0m
+[0m[1mmodule.master_nodes["final-work-subnet-a"].data.yandex_compute_image.vm_image: Read complete after 0s [id=fd8lkfom0r94aa74gfg0][0m
+[0m[1mmodule.worker_nodes["final-work-subnet-d"].data.yandex_compute_image.vm_image: Read complete after 0s [id=fd8lkfom0r94aa74gfg0][0m
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  [32m+[0m create[0m
+
+Terraform will perform the following actions:
+
+[1m  # local_file.inventory_cfg[0m will be created
+[0m  [32m+[0m[0m resource "local_file" "inventory_cfg" {
+      [32m+[0m[0m content              = (known after apply)
+      [32m+[0m[0m content_base64sha256 = (known after apply)
+      [32m+[0m[0m content_base64sha512 = (known after apply)
+      [32m+[0m[0m content_md5          = (known after apply)
+      [32m+[0m[0m content_sha1         = (known after apply)
+      [32m+[0m[0m content_sha256       = (known after apply)
+      [32m+[0m[0m content_sha512       = (known after apply)
+      [32m+[0m[0m directory_permission = "0777"
+      [32m+[0m[0m file_permission      = "0777"
+      [32m+[0m[0m filename             = "../tmp/host.yml"
+      [32m+[0m[0m id                   = (known after apply)
+    }
+
+[1m  # yandex_lb_network_load_balancer.k8s-load-balancer[0m will be created
+[0m  [32m+[0m[0m resource "yandex_lb_network_load_balancer" "k8s-load-balancer" {
+      [32m+[0m[0m allow_zonal_shift   = (known after apply)
+      [32m+[0m[0m created_at          = (known after apply)
+      [32m+[0m[0m deletion_protection = (known after apply)
+      [32m+[0m[0m folder_id           = (known after apply)
+      [32m+[0m[0m id                  = (known after apply)
+      [32m+[0m[0m name                = "k8s-load-balancer"
+      [32m+[0m[0m region_id           = (known after apply)
+      [32m+[0m[0m type                = "external"
+
+      [32m+[0m[0m attached_target_group {
+          [32m+[0m[0m target_group_id = (known after apply)
+
+          [32m+[0m[0m healthcheck {
+              [32m+[0m[0m healthy_threshold   = 2
+              [32m+[0m[0m interval            = 2
+              [32m+[0m[0m name                = "tcp"
+              [32m+[0m[0m timeout             = 1
+              [32m+[0m[0m unhealthy_threshold = 2
+
+              [32m+[0m[0m tcp_options {
+                  [32m+[0m[0m port = 22
+                }
+            }
+        }
+
+      [32m+[0m[0m listener {
+          [32m+[0m[0m name        = "web-app"
+          [32m+[0m[0m port        = 80
+          [32m+[0m[0m protocol    = (known after apply)
+          [32m+[0m[0m target_port = 30080
+
+          [32m+[0m[0m external_address_spec {
+              [32m+[0m[0m address    = (known after apply)
+              [32m+[0m[0m ip_version = "ipv4"
+            }
+        }
+    }
+
+[1m  # yandex_lb_target_group.k8s_load_balancer[0m will be created
+[0m  [32m+[0m[0m resource "yandex_lb_target_group" "k8s_load_balancer" {
+      [32m+[0m[0m created_at = (known after apply)
+      [32m+[0m[0m folder_id  = (known after apply)
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m name       = "k8s-load-balancer-target-group"
+      [32m+[0m[0m region_id  = (known after apply)
+    }
+
+[1m  # yandex_vpc_network.network[0m will be created
+[0m  [32m+[0m[0m resource "yandex_vpc_network" "network" {
+      [32m+[0m[0m created_at                = (known after apply)
+      [32m+[0m[0m default_security_group_id = (known after apply)
+      [32m+[0m[0m description               = "Final work network name"
+      [32m+[0m[0m folder_id                 = (known after apply)
+      [32m+[0m[0m id                        = (known after apply)
+      [32m+[0m[0m labels                    = (known after apply)
+      [32m+[0m[0m name                      = "finalwork"
+      [32m+[0m[0m subnet_ids                = (known after apply)
+    }
+
+[1m  # yandex_vpc_route_table.nat_route_table[0m will be created
+[0m  [32m+[0m[0m resource "yandex_vpc_route_table" "nat_route_table" {
+      [32m+[0m[0m created_at  = (known after apply)
+      [32m+[0m[0m description = "Route table for final work"
+      [32m+[0m[0m folder_id   = (known after apply)
+      [32m+[0m[0m id          = (known after apply)
+      [32m+[0m[0m labels      = (known after apply)
+      [32m+[0m[0m name        = "finalwork-route-table"
+      [32m+[0m[0m network_id  = (known after apply)
+
+      [32m+[0m[0m static_route {
+          [32m+[0m[0m destination_prefix = "0.0.0.0/0"
+          [32m+[0m[0m next_hop_address   = (known after apply)
+            [90m# (1 unchanged attribute hidden)[0m[0m
+        }
+    }
+
+[1m  # yandex_vpc_security_group.nat_security_group[0m will be created
+[0m  [32m+[0m[0m resource "yandex_vpc_security_group" "nat_security_group" {
+      [32m+[0m[0m created_at = (known after apply)
+      [32m+[0m[0m folder_id  = (known after apply)
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m labels     = (known after apply)
+      [32m+[0m[0m name       = "nat-security-group"
+      [32m+[0m[0m network_id = (known after apply)
+      [32m+[0m[0m status     = (known after apply)
+
+      [32m+[0m[0m egress {
+          [32m+[0m[0m description       = "any"
+          [32m+[0m[0m from_port         = -1
+          [32m+[0m[0m id                = (known after apply)
+          [32m+[0m[0m labels            = (known after apply)
+          [32m+[0m[0m port              = -1
+          [32m+[0m[0m protocol          = "ANY"
+          [32m+[0m[0m to_port           = -1
+          [32m+[0m[0m v4_cidr_blocks    = [
+              [32m+[0m[0m "0.0.0.0/0",
+            ]
+          [32m+[0m[0m v6_cidr_blocks    = []
+            [90m# (2 unchanged attributes hidden)[0m[0m
+        }
+
+      [32m+[0m[0m ingress {
+          [32m+[0m[0m description       = "any"
+          [32m+[0m[0m from_port         = -1
+          [32m+[0m[0m id                = (known after apply)
+          [32m+[0m[0m labels            = (known after apply)
+          [32m+[0m[0m port              = -1
+          [32m+[0m[0m protocol          = "ANY"
+          [32m+[0m[0m to_port           = -1
+          [32m+[0m[0m v4_cidr_blocks    = [
+              [32m+[0m[0m "0.0.0.0/0",
+            ]
+          [32m+[0m[0m v6_cidr_blocks    = []
+            [90m# (2 unchanged attributes hidden)[0m[0m
+        }
+    }
+
+[1m  # yandex_vpc_subnet.nat_subnet[0m will be created
+[0m  [32m+[0m[0m resource "yandex_vpc_subnet" "nat_subnet" {
+      [32m+[0m[0m created_at     = (known after apply)
+      [32m+[0m[0m folder_id      = (known after apply)
+      [32m+[0m[0m id             = (known after apply)
+      [32m+[0m[0m labels         = (known after apply)
+      [32m+[0m[0m name           = "final-work-subnet-nat"
+      [32m+[0m[0m network_id     = (known after apply)
+      [32m+[0m[0m v4_cidr_blocks = [
+          [32m+[0m[0m "192.168.10.0/24",
+        ]
+      [32m+[0m[0m v6_cidr_blocks = (known after apply)
+      [32m+[0m[0m zone           = "ru-central1-a"
+    }
+
+[1m  # yandex_vpc_subnet.subnets["final-work-subnet-a"][0m will be created
+[0m  [32m+[0m[0m resource "yandex_vpc_subnet" "subnets" {
+      [32m+[0m[0m created_at     = (known after apply)
+      [32m+[0m[0m folder_id      = (known after apply)
+      [32m+[0m[0m id             = (known after apply)
+      [32m+[0m[0m labels         = (known after apply)
+      [32m+[0m[0m name           = "final-work-subnet-a"
+      [32m+[0m[0m network_id     = (known after apply)
+      [32m+[0m[0m route_table_id = (known after apply)
+      [32m+[0m[0m v4_cidr_blocks = [
+          [32m+[0m[0m "10.10.1.0/24",
+        ]
+      [32m+[0m[0m v6_cidr_blocks = (known after apply)
+      [32m+[0m[0m zone           = "ru-central1-a"
+    }
+
+[1m  # yandex_vpc_subnet.subnets["final-work-subnet-b"][0m will be created
+[0m  [32m+[0m[0m resource "yandex_vpc_subnet" "subnets" {
+      [32m+[0m[0m created_at     = (known after apply)
+      [32m+[0m[0m folder_id      = (known after apply)
+      [32m+[0m[0m id             = (known after apply)
+      [32m+[0m[0m labels         = (known after apply)
+      [32m+[0m[0m name           = "final-work-subnet-b"
+      [32m+[0m[0m network_id     = (known after apply)
+      [32m+[0m[0m route_table_id = (known after apply)
+      [32m+[0m[0m v4_cidr_blocks = [
+          [32m+[0m[0m "10.10.2.0/24",
+        ]
+      [32m+[0m[0m v6_cidr_blocks = (known after apply)
+      [32m+[0m[0m zone           = "ru-central1-b"
+    }
+
+[1m  # yandex_vpc_subnet.subnets["final-work-subnet-d"][0m will be created
+[0m  [32m+[0m[0m resource "yandex_vpc_subnet" "subnets" {
+      [32m+[0m[0m created_at     = (known after apply)
+      [32m+[0m[0m folder_id      = (known after apply)
+      [32m+[0m[0m id             = (known after apply)
+      [32m+[0m[0m labels         = (known after apply)
+      [32m+[0m[0m name           = "final-work-subnet-d"
+      [32m+[0m[0m network_id     = (known after apply)
+      [32m+[0m[0m route_table_id = (known after apply)
+      [32m+[0m[0m v4_cidr_blocks = [
+          [32m+[0m[0m "10.10.3.0/24",
+        ]
+      [32m+[0m[0m v6_cidr_blocks = (known after apply)
+      [32m+[0m[0m zone           = "ru-central1-d"
+    }
+
+[1m  # module.admin_vm.yandex_compute_instance.vm[0][0m will be created
+[0m  [32m+[0m[0m resource "yandex_compute_instance" "vm" {
+      [32m+[0m[0m allow_stopping_for_update = true
+      [32m+[0m[0m created_at                = (known after apply)
+      [32m+[0m[0m folder_id                 = (known after apply)
+      [32m+[0m[0m fqdn                      = (known after apply)
+      [32m+[0m[0m gpu_cluster_id            = (known after apply)
+      [32m+[0m[0m hardware_generation       = (known after apply)
+      [32m+[0m[0m hostname                  = "admin-ru-central1-a-1"
+      [32m+[0m[0m id                        = (known after apply)
+      [32m+[0m[0m labels                    = {
+          [32m+[0m[0m "owner"   = "v.bazanov"
+          [32m+[0m[0m "project" = "finalwork"
+        }
+      [32m+[0m[0m maintenance_grace_period  = (known after apply)
+      [32m+[0m[0m maintenance_policy        = (known after apply)
+      [32m+[0m[0m metadata                  = {
+          [32m+[0m[0m "serial-port-enable" = "1"
+          [32m+[0m[0m "user-data"          = <<-EOT
+                #cloud-config
+                users:
+                  - name: ubuntu
+                    groups: sudo
+                    shell: /bin/bash
+                    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+                    ssh_authorized_keys:
+                      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCyZG91mVjwyl6Cml68Fm4NYadwAgj2brGfMfStB1wbtAoi6wMMvp8k1Ggz1NJzrz0J4Xc24ultl/UyaVFtbbT1MtiW0HbbCbvNqo9zWsQa38W9NY05A51ws22tFMG4+VEfsMB2ul04mnUJyUSyth3r3ut+JLnRxxDfxxiX43X0zcznv0mDhI/DcowFW161F8DnK7022E9hSStGfqfIX5AYOPl8JJPU3KfbtMbKENtGq857a9zy1P5+tlEB/g+Ap1lE1VgMpdyoQhCW2Qqhd1c8EH9MfV+y35dbI1acUjugmYztW07fYL9SwXgw1qij0ZKbAB4bp2XstF7K01Y1q8h1oGA6mzZj2ipxTsLWKEdhjnWVCzy2jtiouF0luOoGP3T7aguzPHy0d2UaYYVfFvZHeaX6uYi6WtnFB9v0jS6ADdD7fDBZIiKckfpYgx/KkC3lXDdjslbn3cUjeLka7jI4nhSz+bhLOMIhTJ6Qkr0YVE/ryOTZwx/RpC60ezJu7VM= t1@t1-MEGABOOK-T1
+                package_update: true
+                package_upgrade: false
+                packages:
+                  - vim
+            EOT
+        }
+      [32m+[0m[0m name                      = "admin-ru-central1-a-1"
+      [32m+[0m[0m network_acceleration_type = "standard"
+      [32m+[0m[0m platform_id               = "standard-v3"
+      [32m+[0m[0m service_account_id        = (known after apply)
+      [32m+[0m[0m status                    = (known after apply)
+      [32m+[0m[0m zone                      = "ru-central1-a"
+
+      [32m+[0m[0m boot_disk {
+          [32m+[0m[0m auto_delete = true
+          [32m+[0m[0m device_name = (known after apply)
+          [32m+[0m[0m disk_id     = (known after apply)
+          [32m+[0m[0m mode        = (known after apply)
+
+          [32m+[0m[0m initialize_params {
+              [32m+[0m[0m block_size  = (known after apply)
+              [32m+[0m[0m description = (known after apply)
+              [32m+[0m[0m image_id    = "fd8lkfom0r94aa74gfg0"
+              [32m+[0m[0m name        = (known after apply)
+              [32m+[0m[0m size        = 20
+              [32m+[0m[0m snapshot_id = (known after apply)
+              [32m+[0m[0m type        = "network-hdd"
+            }
+        }
+
+      [32m+[0m[0m network_interface {
+          [32m+[0m[0m index              = (known after apply)
+          [32m+[0m[0m ip_address         = (known after apply)
+          [32m+[0m[0m ipv4               = true
+          [32m+[0m[0m ipv6               = (known after apply)
+          [32m+[0m[0m ipv6_address       = (known after apply)
+          [32m+[0m[0m mac_address        = (known after apply)
+          [32m+[0m[0m nat                = true
+          [32m+[0m[0m nat_ip_address     = (known after apply)
+          [32m+[0m[0m nat_ip_version     = (known after apply)
+          [32m+[0m[0m security_group_ids = (known after apply)
+          [32m+[0m[0m subnet_id          = (known after apply)
+        }
+
+      [32m+[0m[0m resources {
+          [32m+[0m[0m core_fraction = 100
+          [32m+[0m[0m cores         = 2
+          [32m+[0m[0m memory        = 2
+        }
+
+      [32m+[0m[0m scheduling_policy {
+          [32m+[0m[0m preemptible = true
+        }
+    }
+
+[1m  # module.master_nodes["final-work-subnet-a"].yandex_compute_instance.vm[0][0m will be created
+[0m  [32m+[0m[0m resource "yandex_compute_instance" "vm" {
+      [32m+[0m[0m allow_stopping_for_update = true
+      [32m+[0m[0m created_at                = (known after apply)
+      [32m+[0m[0m folder_id                 = (known after apply)
+      [32m+[0m[0m fqdn                      = (known after apply)
+      [32m+[0m[0m gpu_cluster_id            = (known after apply)
+      [32m+[0m[0m hardware_generation       = (known after apply)
+      [32m+[0m[0m hostname                  = "master-ru-central1-a-1"
+      [32m+[0m[0m id                        = (known after apply)
+      [32m+[0m[0m labels                    = {
+          [32m+[0m[0m "owner"   = "v.bazanov"
+          [32m+[0m[0m "project" = "finalwork"
+        }
+      [32m+[0m[0m maintenance_grace_period  = (known after apply)
+      [32m+[0m[0m maintenance_policy        = (known after apply)
+      [32m+[0m[0m metadata                  = {
+          [32m+[0m[0m "serial-port-enable" = "1"
+          [32m+[0m[0m "user-data"          = <<-EOT
+                #cloud-config
+                users:
+                  - name: ubuntu
+                    groups: sudo
+                    shell: /bin/bash
+                    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+                    ssh_authorized_keys:
+                      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCyZG91mVjwyl6Cml68Fm4NYadwAgj2brGfMfStB1wbtAoi6wMMvp8k1Ggz1NJzrz0J4Xc24ultl/UyaVFtbbT1MtiW0HbbCbvNqo9zWsQa38W9NY05A51ws22tFMG4+VEfsMB2ul04mnUJyUSyth3r3ut+JLnRxxDfxxiX43X0zcznv0mDhI/DcowFW161F8DnK7022E9hSStGfqfIX5AYOPl8JJPU3KfbtMbKENtGq857a9zy1P5+tlEB/g+Ap1lE1VgMpdyoQhCW2Qqhd1c8EH9MfV+y35dbI1acUjugmYztW07fYL9SwXgw1qij0ZKbAB4bp2XstF7K01Y1q8h1oGA6mzZj2ipxTsLWKEdhjnWVCzy2jtiouF0luOoGP3T7aguzPHy0d2UaYYVfFvZHeaX6uYi6WtnFB9v0jS6ADdD7fDBZIiKckfpYgx/KkC3lXDdjslbn3cUjeLka7jI4nhSz+bhLOMIhTJ6Qkr0YVE/ryOTZwx/RpC60ezJu7VM= t1@t1-MEGABOOK-T1
+                package_update: true
+                package_upgrade: false
+                packages:
+                  - vim
+            EOT
+        }
+      [32m+[0m[0m name                      = "master-ru-central1-a-1"
+      [32m+[0m[0m network_acceleration_type = "standard"
+      [32m+[0m[0m platform_id               = "standard-v3"
+      [32m+[0m[0m service_account_id        = (known after apply)
+      [32m+[0m[0m status                    = (known after apply)
+      [32m+[0m[0m zone                      = "ru-central1-a"
+
+      [32m+[0m[0m boot_disk {
+          [32m+[0m[0m auto_delete = true
+          [32m+[0m[0m device_name = (known after apply)
+          [32m+[0m[0m disk_id     = (known after apply)
+          [32m+[0m[0m mode        = (known after apply)
+
+          [32m+[0m[0m initialize_params {
+              [32m+[0m[0m block_size  = (known after apply)
+              [32m+[0m[0m description = (known after apply)
+              [32m+[0m[0m image_id    = "fd8lkfom0r94aa74gfg0"
+              [32m+[0m[0m name        = (known after apply)
+              [32m+[0m[0m size        = 20
+              [32m+[0m[0m snapshot_id = (known after apply)
+              [32m+[0m[0m type        = "network-hdd"
+            }
+        }
+
+      [32m+[0m[0m network_interface {
+          [32m+[0m[0m index              = (known after apply)
+          [32m+[0m[0m ip_address         = (known after apply)
+          [32m+[0m[0m ipv4               = true
+          [32m+[0m[0m ipv6               = (known after apply)
+          [32m+[0m[0m ipv6_address       = (known after apply)
+          [32m+[0m[0m mac_address        = (known after apply)
+          [32m+[0m[0m nat                = false
+          [32m+[0m[0m nat_ip_address     = (known after apply)
+          [32m+[0m[0m nat_ip_version     = (known after apply)
+          [32m+[0m[0m security_group_ids = (known after apply)
+          [32m+[0m[0m subnet_id          = (known after apply)
+        }
+
+      [32m+[0m[0m resources {
+          [32m+[0m[0m core_fraction = 100
+          [32m+[0m[0m cores         = 2
+          [32m+[0m[0m memory        = 4
+        }
+
+      [32m+[0m[0m scheduling_policy {
+          [32m+[0m[0m preemptible = true
+        }
+    }
+
+[1m  # module.master_nodes["final-work-subnet-b"].yandex_compute_instance.vm[0][0m will be created
+[0m  [32m+[0m[0m resource "yandex_compute_instance" "vm" {
+      [32m+[0m[0m allow_stopping_for_update = true
+      [32m+[0m[0m created_at                = (known after apply)
+      [32m+[0m[0m folder_id                 = (known after apply)
+      [32m+[0m[0m fqdn                      = (known after apply)
+      [32m+[0m[0m gpu_cluster_id            = (known after apply)
+      [32m+[0m[0m hardware_generation       = (known after apply)
+      [32m+[0m[0m hostname                  = "master-ru-central1-b-1"
+      [32m+[0m[0m id                        = (known after apply)
+      [32m+[0m[0m labels                    = {
+          [32m+[0m[0m "owner"   = "v.bazanov"
+          [32m+[0m[0m "project" = "finalwork"
+        }
+      [32m+[0m[0m maintenance_grace_period  = (known after apply)
+      [32m+[0m[0m maintenance_policy        = (known after apply)
+      [32m+[0m[0m metadata                  = {
+          [32m+[0m[0m "serial-port-enable" = "1"
+          [32m+[0m[0m "user-data"          = <<-EOT
+                #cloud-config
+                users:
+                  - name: ubuntu
+                    groups: sudo
+                    shell: /bin/bash
+                    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+                    ssh_authorized_keys:
+                      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCyZG91mVjwyl6Cml68Fm4NYadwAgj2brGfMfStB1wbtAoi6wMMvp8k1Ggz1NJzrz0J4Xc24ultl/UyaVFtbbT1MtiW0HbbCbvNqo9zWsQa38W9NY05A51ws22tFMG4+VEfsMB2ul04mnUJyUSyth3r3ut+JLnRxxDfxxiX43X0zcznv0mDhI/DcowFW161F8DnK7022E9hSStGfqfIX5AYOPl8JJPU3KfbtMbKENtGq857a9zy1P5+tlEB/g+Ap1lE1VgMpdyoQhCW2Qqhd1c8EH9MfV+y35dbI1acUjugmYztW07fYL9SwXgw1qij0ZKbAB4bp2XstF7K01Y1q8h1oGA6mzZj2ipxTsLWKEdhjnWVCzy2jtiouF0luOoGP3T7aguzPHy0d2UaYYVfFvZHeaX6uYi6WtnFB9v0jS6ADdD7fDBZIiKckfpYgx/KkC3lXDdjslbn3cUjeLka7jI4nhSz+bhLOMIhTJ6Qkr0YVE/ryOTZwx/RpC60ezJu7VM= t1@t1-MEGABOOK-T1
+                package_update: true
+                package_upgrade: false
+                packages:
+                  - vim
+            EOT
+        }
+      [32m+[0m[0m name                      = "master-ru-central1-b-1"
+      [32m+[0m[0m network_acceleration_type = "standard"
+      [32m+[0m[0m platform_id               = "standard-v3"
+      [32m+[0m[0m service_account_id        = (known after apply)
+      [32m+[0m[0m status                    = (known after apply)
+      [32m+[0m[0m zone                      = "ru-central1-b"
+
+      [32m+[0m[0m boot_disk {
+          [32m+[0m[0m auto_delete = true
+          [32m+[0m[0m device_name = (known after apply)
+          [32m+[0m[0m disk_id     = (known after apply)
+          [32m+[0m[0m mode        = (known after apply)
+
+          [32m+[0m[0m initialize_params {
+              [32m+[0m[0m block_size  = (known after apply)
+              [32m+[0m[0m description = (known after apply)
+              [32m+[0m[0m image_id    = "fd8lkfom0r94aa74gfg0"
+              [32m+[0m[0m name        = (known after apply)
+              [32m+[0m[0m size        = 20
+              [32m+[0m[0m snapshot_id = (known after apply)
+              [32m+[0m[0m type        = "network-hdd"
+            }
+        }
+
+      [32m+[0m[0m network_interface {
+          [32m+[0m[0m index              = (known after apply)
+          [32m+[0m[0m ip_address         = (known after apply)
+          [32m+[0m[0m ipv4               = true
+          [32m+[0m[0m ipv6               = (known after apply)
+          [32m+[0m[0m ipv6_address       = (known after apply)
+          [32m+[0m[0m mac_address        = (known after apply)
+          [32m+[0m[0m nat                = false
+          [32m+[0m[0m nat_ip_address     = (known after apply)
+          [32m+[0m[0m nat_ip_version     = (known after apply)
+          [32m+[0m[0m security_group_ids = (known after apply)
+          [32m+[0m[0m subnet_id          = (known after apply)
+        }
+
+      [32m+[0m[0m resources {
+          [32m+[0m[0m core_fraction = 100
+          [32m+[0m[0m cores         = 2
+          [32m+[0m[0m memory        = 4
+        }
+
+      [32m+[0m[0m scheduling_policy {
+          [32m+[0m[0m preemptible = true
+        }
+    }
+
+[1m  # module.master_nodes["final-work-subnet-d"].yandex_compute_instance.vm[0][0m will be created
+[0m  [32m+[0m[0m resource "yandex_compute_instance" "vm" {
+      [32m+[0m[0m allow_stopping_for_update = true
+      [32m+[0m[0m created_at                = (known after apply)
+      [32m+[0m[0m folder_id                 = (known after apply)
+      [32m+[0m[0m fqdn                      = (known after apply)
+      [32m+[0m[0m gpu_cluster_id            = (known after apply)
+      [32m+[0m[0m hardware_generation       = (known after apply)
+      [32m+[0m[0m hostname                  = "master-ru-central1-d-1"
+      [32m+[0m[0m id                        = (known after apply)
+      [32m+[0m[0m labels                    = {
+          [32m+[0m[0m "owner"   = "v.bazanov"
+          [32m+[0m[0m "project" = "finalwork"
+        }
+      [32m+[0m[0m maintenance_grace_period  = (known after apply)
+      [32m+[0m[0m maintenance_policy        = (known after apply)
+      [32m+[0m[0m metadata                  = {
+          [32m+[0m[0m "serial-port-enable" = "1"
+          [32m+[0m[0m "user-data"          = <<-EOT
+                #cloud-config
+                users:
+                  - name: ubuntu
+                    groups: sudo
+                    shell: /bin/bash
+                    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+                    ssh_authorized_keys:
+                      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCyZG91mVjwyl6Cml68Fm4NYadwAgj2brGfMfStB1wbtAoi6wMMvp8k1Ggz1NJzrz0J4Xc24ultl/UyaVFtbbT1MtiW0HbbCbvNqo9zWsQa38W9NY05A51ws22tFMG4+VEfsMB2ul04mnUJyUSyth3r3ut+JLnRxxDfxxiX43X0zcznv0mDhI/DcowFW161F8DnK7022E9hSStGfqfIX5AYOPl8JJPU3KfbtMbKENtGq857a9zy1P5+tlEB/g+Ap1lE1VgMpdyoQhCW2Qqhd1c8EH9MfV+y35dbI1acUjugmYztW07fYL9SwXgw1qij0ZKbAB4bp2XstF7K01Y1q8h1oGA6mzZj2ipxTsLWKEdhjnWVCzy2jtiouF0luOoGP3T7aguzPHy0d2UaYYVfFvZHeaX6uYi6WtnFB9v0jS6ADdD7fDBZIiKckfpYgx/KkC3lXDdjslbn3cUjeLka7jI4nhSz+bhLOMIhTJ6Qkr0YVE/ryOTZwx/RpC60ezJu7VM= t1@t1-MEGABOOK-T1
+                package_update: true
+                package_upgrade: false
+                packages:
+                  - vim
+            EOT
+        }
+      [32m+[0m[0m name                      = "master-ru-central1-d-1"
+      [32m+[0m[0m network_acceleration_type = "standard"
+      [32m+[0m[0m platform_id               = "standard-v3"
+      [32m+[0m[0m service_account_id        = (known after apply)
+      [32m+[0m[0m status                    = (known after apply)
+      [32m+[0m[0m zone                      = "ru-central1-d"
+
+      [32m+[0m[0m boot_disk {
+          [32m+[0m[0m auto_delete = true
+          [32m+[0m[0m device_name = (known after apply)
+          [32m+[0m[0m disk_id     = (known after apply)
+          [32m+[0m[0m mode        = (known after apply)
+
+          [32m+[0m[0m initialize_params {
+              [32m+[0m[0m block_size  = (known after apply)
+              [32m+[0m[0m description = (known after apply)
+              [32m+[0m[0m image_id    = "fd8lkfom0r94aa74gfg0"
+              [32m+[0m[0m name        = (known after apply)
+              [32m+[0m[0m size        = 20
+              [32m+[0m[0m snapshot_id = (known after apply)
+              [32m+[0m[0m type        = "network-hdd"
+            }
+        }
+
+      [32m+[0m[0m network_interface {
+          [32m+[0m[0m index              = (known after apply)
+          [32m+[0m[0m ip_address         = (known after apply)
+          [32m+[0m[0m ipv4               = true
+          [32m+[0m[0m ipv6               = (known after apply)
+          [32m+[0m[0m ipv6_address       = (known after apply)
+          [32m+[0m[0m mac_address        = (known after apply)
+          [32m+[0m[0m nat                = false
+          [32m+[0m[0m nat_ip_address     = (known after apply)
+          [32m+[0m[0m nat_ip_version     = (known after apply)
+          [32m+[0m[0m security_group_ids = (known after apply)
+          [32m+[0m[0m subnet_id          = (known after apply)
+        }
+
+      [32m+[0m[0m resources {
+          [32m+[0m[0m core_fraction = 100
+          [32m+[0m[0m cores         = 2
+          [32m+[0m[0m memory        = 4
+        }
+
+      [32m+[0m[0m scheduling_policy {
+          [32m+[0m[0m preemptible = true
+        }
+    }
+
+[1m  # module.nat_vm.yandex_compute_instance.vm[0][0m will be created
+[0m  [32m+[0m[0m resource "yandex_compute_instance" "vm" {
+      [32m+[0m[0m allow_stopping_for_update = true
+      [32m+[0m[0m created_at                = (known after apply)
+      [32m+[0m[0m folder_id                 = (known after apply)
+      [32m+[0m[0m fqdn                      = (known after apply)
+      [32m+[0m[0m gpu_cluster_id            = (known after apply)
+      [32m+[0m[0m hardware_generation       = (known after apply)
+      [32m+[0m[0m hostname                  = "nat-ru-central1-a-1"
+      [32m+[0m[0m id                        = (known after apply)
+      [32m+[0m[0m labels                    = {
+          [32m+[0m[0m "owner"   = "v.bazanov"
+          [32m+[0m[0m "project" = "finalwork"
+        }
+      [32m+[0m[0m maintenance_grace_period  = (known after apply)
+      [32m+[0m[0m maintenance_policy        = (known after apply)
+      [32m+[0m[0m metadata                  = {
+          [32m+[0m[0m "serial-port-enable" = "1"
+          [32m+[0m[0m "user-data"          = <<-EOT
+                #cloud-config
+                users:
+                  - name: ubuntu
+                    groups: sudo
+                    shell: /bin/bash
+                    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+                    ssh_authorized_keys:
+                      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCyZG91mVjwyl6Cml68Fm4NYadwAgj2brGfMfStB1wbtAoi6wMMvp8k1Ggz1NJzrz0J4Xc24ultl/UyaVFtbbT1MtiW0HbbCbvNqo9zWsQa38W9NY05A51ws22tFMG4+VEfsMB2ul04mnUJyUSyth3r3ut+JLnRxxDfxxiX43X0zcznv0mDhI/DcowFW161F8DnK7022E9hSStGfqfIX5AYOPl8JJPU3KfbtMbKENtGq857a9zy1P5+tlEB/g+Ap1lE1VgMpdyoQhCW2Qqhd1c8EH9MfV+y35dbI1acUjugmYztW07fYL9SwXgw1qij0ZKbAB4bp2XstF7K01Y1q8h1oGA6mzZj2ipxTsLWKEdhjnWVCzy2jtiouF0luOoGP3T7aguzPHy0d2UaYYVfFvZHeaX6uYi6WtnFB9v0jS6ADdD7fDBZIiKckfpYgx/KkC3lXDdjslbn3cUjeLka7jI4nhSz+bhLOMIhTJ6Qkr0YVE/ryOTZwx/RpC60ezJu7VM= t1@t1-MEGABOOK-T1
+                package_update: true
+                package_upgrade: false
+                packages:
+                  - vim
+            EOT
+        }
+      [32m+[0m[0m name                      = "nat-ru-central1-a-1"
+      [32m+[0m[0m network_acceleration_type = "standard"
+      [32m+[0m[0m platform_id               = "standard-v3"
+      [32m+[0m[0m service_account_id        = (known after apply)
+      [32m+[0m[0m status                    = (known after apply)
+      [32m+[0m[0m zone                      = "ru-central1-a"
+
+      [32m+[0m[0m boot_disk {
+          [32m+[0m[0m auto_delete = true
+          [32m+[0m[0m device_name = (known after apply)
+          [32m+[0m[0m disk_id     = (known after apply)
+          [32m+[0m[0m mode        = (known after apply)
+
+          [32m+[0m[0m initialize_params {
+              [32m+[0m[0m block_size  = (known after apply)
+              [32m+[0m[0m description = (known after apply)
+              [32m+[0m[0m image_id    = "fd8ai3a41vbqhmc7dbvb"
+              [32m+[0m[0m name        = (known after apply)
+              [32m+[0m[0m size        = 20
+              [32m+[0m[0m snapshot_id = (known after apply)
+              [32m+[0m[0m type        = "network-hdd"
+            }
+        }
+
+      [32m+[0m[0m network_interface {
+          [32m+[0m[0m index              = (known after apply)
+          [32m+[0m[0m ip_address         = (known after apply)
+          [32m+[0m[0m ipv4               = true
+          [32m+[0m[0m ipv6               = (known after apply)
+          [32m+[0m[0m ipv6_address       = (known after apply)
+          [32m+[0m[0m mac_address        = (known after apply)
+          [32m+[0m[0m nat                = true
+          [32m+[0m[0m nat_ip_address     = (known after apply)
+          [32m+[0m[0m nat_ip_version     = (known after apply)
+          [32m+[0m[0m security_group_ids = (known after apply)
+          [32m+[0m[0m subnet_id          = (known after apply)
+        }
+
+      [32m+[0m[0m resources {
+          [32m+[0m[0m core_fraction = 100
+          [32m+[0m[0m cores         = 2
+          [32m+[0m[0m memory        = 2
+        }
+
+      [32m+[0m[0m scheduling_policy {
+          [32m+[0m[0m preemptible = true
+        }
+    }
+
+[1m  # module.worker_nodes["final-work-subnet-a"].yandex_compute_instance.vm[0][0m will be created
+[0m  [32m+[0m[0m resource "yandex_compute_instance" "vm" {
+      [32m+[0m[0m allow_stopping_for_update = true
+      [32m+[0m[0m created_at                = (known after apply)
+      [32m+[0m[0m folder_id                 = (known after apply)
+      [32m+[0m[0m fqdn                      = (known after apply)
+      [32m+[0m[0m gpu_cluster_id            = (known after apply)
+      [32m+[0m[0m hardware_generation       = (known after apply)
+      [32m+[0m[0m hostname                  = "worker-ru-central1-a-1"
+      [32m+[0m[0m id                        = (known after apply)
+      [32m+[0m[0m labels                    = {
+          [32m+[0m[0m "owner"   = "v.bazanov"
+          [32m+[0m[0m "project" = "finalwork"
+        }
+      [32m+[0m[0m maintenance_grace_period  = (known after apply)
+      [32m+[0m[0m maintenance_policy        = (known after apply)
+      [32m+[0m[0m metadata                  = {
+          [32m+[0m[0m "serial-port-enable" = "1"
+          [32m+[0m[0m "user-data"          = <<-EOT
+                #cloud-config
+                users:
+                  - name: ubuntu
+                    groups: sudo
+                    shell: /bin/bash
+                    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+                    ssh_authorized_keys:
+                      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCyZG91mVjwyl6Cml68Fm4NYadwAgj2brGfMfStB1wbtAoi6wMMvp8k1Ggz1NJzrz0J4Xc24ultl/UyaVFtbbT1MtiW0HbbCbvNqo9zWsQa38W9NY05A51ws22tFMG4+VEfsMB2ul04mnUJyUSyth3r3ut+JLnRxxDfxxiX43X0zcznv0mDhI/DcowFW161F8DnK7022E9hSStGfqfIX5AYOPl8JJPU3KfbtMbKENtGq857a9zy1P5+tlEB/g+Ap1lE1VgMpdyoQhCW2Qqhd1c8EH9MfV+y35dbI1acUjugmYztW07fYL9SwXgw1qij0ZKbAB4bp2XstF7K01Y1q8h1oGA6mzZj2ipxTsLWKEdhjnWVCzy2jtiouF0luOoGP3T7aguzPHy0d2UaYYVfFvZHeaX6uYi6WtnFB9v0jS6ADdD7fDBZIiKckfpYgx/KkC3lXDdjslbn3cUjeLka7jI4nhSz+bhLOMIhTJ6Qkr0YVE/ryOTZwx/RpC60ezJu7VM= t1@t1-MEGABOOK-T1
+                package_update: true
+                package_upgrade: false
+                packages:
+                  - vim
+            EOT
+        }
+      [32m+[0m[0m name                      = "worker-ru-central1-a-1"
+      [32m+[0m[0m network_acceleration_type = "standard"
+      [32m+[0m[0m platform_id               = "standard-v3"
+      [32m+[0m[0m service_account_id        = (known after apply)
+      [32m+[0m[0m status                    = (known after apply)
+      [32m+[0m[0m zone                      = "ru-central1-a"
+
+      [32m+[0m[0m boot_disk {
+          [32m+[0m[0m auto_delete = true
+          [32m+[0m[0m device_name = (known after apply)
+          [32m+[0m[0m disk_id     = (known after apply)
+          [32m+[0m[0m mode        = (known after apply)
+
+          [32m+[0m[0m initialize_params {
+              [32m+[0m[0m block_size  = (known after apply)
+              [32m+[0m[0m description = (known after apply)
+              [32m+[0m[0m image_id    = "fd8lkfom0r94aa74gfg0"
+              [32m+[0m[0m name        = (known after apply)
+              [32m+[0m[0m size        = 20
+              [32m+[0m[0m snapshot_id = (known after apply)
+              [32m+[0m[0m type        = "network-hdd"
+            }
+        }
+
+      [32m+[0m[0m network_interface {
+          [32m+[0m[0m index              = (known after apply)
+          [32m+[0m[0m ip_address         = (known after apply)
+          [32m+[0m[0m ipv4               = true
+          [32m+[0m[0m ipv6               = (known after apply)
+          [32m+[0m[0m ipv6_address       = (known after apply)
+          [32m+[0m[0m mac_address        = (known after apply)
+          [32m+[0m[0m nat                = false
+          [32m+[0m[0m nat_ip_address     = (known after apply)
+          [32m+[0m[0m nat_ip_version     = (known after apply)
+          [32m+[0m[0m security_group_ids = (known after apply)
+          [32m+[0m[0m subnet_id          = (known after apply)
+        }
+
+      [32m+[0m[0m resources {
+          [32m+[0m[0m core_fraction = 100
+          [32m+[0m[0m cores         = 4
+          [32m+[0m[0m memory        = 8
+        }
+
+      [32m+[0m[0m scheduling_policy {
+          [32m+[0m[0m preemptible = true
+        }
+    }
+
+[1m  # module.worker_nodes["final-work-subnet-b"].yandex_compute_instance.vm[0][0m will be created
+[0m  [32m+[0m[0m resource "yandex_compute_instance" "vm" {
+      [32m+[0m[0m allow_stopping_for_update = true
+      [32m+[0m[0m created_at                = (known after apply)
+      [32m+[0m[0m folder_id                 = (known after apply)
+      [32m+[0m[0m fqdn                      = (known after apply)
+      [32m+[0m[0m gpu_cluster_id            = (known after apply)
+      [32m+[0m[0m hardware_generation       = (known after apply)
+      [32m+[0m[0m hostname                  = "worker-ru-central1-b-1"
+      [32m+[0m[0m id                        = (known after apply)
+      [32m+[0m[0m labels                    = {
+          [32m+[0m[0m "owner"   = "v.bazanov"
+          [32m+[0m[0m "project" = "finalwork"
+        }
+      [32m+[0m[0m maintenance_grace_period  = (known after apply)
+      [32m+[0m[0m maintenance_policy        = (known after apply)
+      [32m+[0m[0m metadata                  = {
+          [32m+[0m[0m "serial-port-enable" = "1"
+          [32m+[0m[0m "user-data"          = <<-EOT
+                #cloud-config
+                users:
+                  - name: ubuntu
+                    groups: sudo
+                    shell: /bin/bash
+                    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+                    ssh_authorized_keys:
+                      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCyZG91mVjwyl6Cml68Fm4NYadwAgj2brGfMfStB1wbtAoi6wMMvp8k1Ggz1NJzrz0J4Xc24ultl/UyaVFtbbT1MtiW0HbbCbvNqo9zWsQa38W9NY05A51ws22tFMG4+VEfsMB2ul04mnUJyUSyth3r3ut+JLnRxxDfxxiX43X0zcznv0mDhI/DcowFW161F8DnK7022E9hSStGfqfIX5AYOPl8JJPU3KfbtMbKENtGq857a9zy1P5+tlEB/g+Ap1lE1VgMpdyoQhCW2Qqhd1c8EH9MfV+y35dbI1acUjugmYztW07fYL9SwXgw1qij0ZKbAB4bp2XstF7K01Y1q8h1oGA6mzZj2ipxTsLWKEdhjnWVCzy2jtiouF0luOoGP3T7aguzPHy0d2UaYYVfFvZHeaX6uYi6WtnFB9v0jS6ADdD7fDBZIiKckfpYgx/KkC3lXDdjslbn3cUjeLka7jI4nhSz+bhLOMIhTJ6Qkr0YVE/ryOTZwx/RpC60ezJu7VM= t1@t1-MEGABOOK-T1
+                package_update: true
+                package_upgrade: false
+                packages:
+                  - vim
+            EOT
+        }
+      [32m+[0m[0m name                      = "worker-ru-central1-b-1"
+      [32m+[0m[0m network_acceleration_type = "standard"
+      [32m+[0m[0m platform_id               = "standard-v3"
+      [32m+[0m[0m service_account_id        = (known after apply)
+      [32m+[0m[0m status                    = (known after apply)
+      [32m+[0m[0m zone                      = "ru-central1-b"
+
+      [32m+[0m[0m boot_disk {
+          [32m+[0m[0m auto_delete = true
+          [32m+[0m[0m device_name = (known after apply)
+          [32m+[0m[0m disk_id     = (known after apply)
+          [32m+[0m[0m mode        = (known after apply)
+
+          [32m+[0m[0m initialize_params {
+              [32m+[0m[0m block_size  = (known after apply)
+              [32m+[0m[0m description = (known after apply)
+              [32m+[0m[0m image_id    = "fd8lkfom0r94aa74gfg0"
+              [32m+[0m[0m name        = (known after apply)
+              [32m+[0m[0m size        = 20
+              [32m+[0m[0m snapshot_id = (known after apply)
+              [32m+[0m[0m type        = "network-hdd"
+            }
+        }
+
+      [32m+[0m[0m network_interface {
+          [32m+[0m[0m index              = (known after apply)
+          [32m+[0m[0m ip_address         = (known after apply)
+          [32m+[0m[0m ipv4               = true
+          [32m+[0m[0m ipv6               = (known after apply)
+          [32m+[0m[0m ipv6_address       = (known after apply)
+          [32m+[0m[0m mac_address        = (known after apply)
+          [32m+[0m[0m nat                = false
+          [32m+[0m[0m nat_ip_address     = (known after apply)
+          [32m+[0m[0m nat_ip_version     = (known after apply)
+          [32m+[0m[0m security_group_ids = (known after apply)
+          [32m+[0m[0m subnet_id          = (known after apply)
+        }
+
+      [32m+[0m[0m resources {
+          [32m+[0m[0m core_fraction = 100
+          [32m+[0m[0m cores         = 4
+          [32m+[0m[0m memory        = 8
+        }
+
+      [32m+[0m[0m scheduling_policy {
+          [32m+[0m[0m preemptible = true
+        }
+    }
+
+[1m  # module.worker_nodes["final-work-subnet-d"].yandex_compute_instance.vm[0][0m will be created
+[0m  [32m+[0m[0m resource "yandex_compute_instance" "vm" {
+      [32m+[0m[0m allow_stopping_for_update = true
+      [32m+[0m[0m created_at                = (known after apply)
+      [32m+[0m[0m folder_id                 = (known after apply)
+      [32m+[0m[0m fqdn                      = (known after apply)
+      [32m+[0m[0m gpu_cluster_id            = (known after apply)
+      [32m+[0m[0m hardware_generation       = (known after apply)
+      [32m+[0m[0m hostname                  = "worker-ru-central1-d-1"
+      [32m+[0m[0m id                        = (known after apply)
+      [32m+[0m[0m labels                    = {
+          [32m+[0m[0m "owner"   = "v.bazanov"
+          [32m+[0m[0m "project" = "finalwork"
+        }
+      [32m+[0m[0m maintenance_grace_period  = (known after apply)
+      [32m+[0m[0m maintenance_policy        = (known after apply)
+      [32m+[0m[0m metadata                  = {
+          [32m+[0m[0m "serial-port-enable" = "1"
+          [32m+[0m[0m "user-data"          = <<-EOT
+                #cloud-config
+                users:
+                  - name: ubuntu
+                    groups: sudo
+                    shell: /bin/bash
+                    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+                    ssh_authorized_keys:
+                      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCyZG91mVjwyl6Cml68Fm4NYadwAgj2brGfMfStB1wbtAoi6wMMvp8k1Ggz1NJzrz0J4Xc24ultl/UyaVFtbbT1MtiW0HbbCbvNqo9zWsQa38W9NY05A51ws22tFMG4+VEfsMB2ul04mnUJyUSyth3r3ut+JLnRxxDfxxiX43X0zcznv0mDhI/DcowFW161F8DnK7022E9hSStGfqfIX5AYOPl8JJPU3KfbtMbKENtGq857a9zy1P5+tlEB/g+Ap1lE1VgMpdyoQhCW2Qqhd1c8EH9MfV+y35dbI1acUjugmYztW07fYL9SwXgw1qij0ZKbAB4bp2XstF7K01Y1q8h1oGA6mzZj2ipxTsLWKEdhjnWVCzy2jtiouF0luOoGP3T7aguzPHy0d2UaYYVfFvZHeaX6uYi6WtnFB9v0jS6ADdD7fDBZIiKckfpYgx/KkC3lXDdjslbn3cUjeLka7jI4nhSz+bhLOMIhTJ6Qkr0YVE/ryOTZwx/RpC60ezJu7VM= t1@t1-MEGABOOK-T1
+                package_update: true
+                package_upgrade: false
+                packages:
+                  - vim
+            EOT
+        }
+      [32m+[0m[0m name                      = "worker-ru-central1-d-1"
+      [32m+[0m[0m network_acceleration_type = "standard"
+      [32m+[0m[0m platform_id               = "standard-v3"
+      [32m+[0m[0m service_account_id        = (known after apply)
+      [32m+[0m[0m status                    = (known after apply)
+      [32m+[0m[0m zone                      = "ru-central1-d"
+
+      [32m+[0m[0m boot_disk {
+          [32m+[0m[0m auto_delete = true
+          [32m+[0m[0m device_name = (known after apply)
+          [32m+[0m[0m disk_id     = (known after apply)
+          [32m+[0m[0m mode        = (known after apply)
+
+          [32m+[0m[0m initialize_params {
+              [32m+[0m[0m block_size  = (known after apply)
+              [32m+[0m[0m description = (known after apply)
+              [32m+[0m[0m image_id    = "fd8lkfom0r94aa74gfg0"
+              [32m+[0m[0m name        = (known after apply)
+              [32m+[0m[0m size        = 20
+              [32m+[0m[0m snapshot_id = (known after apply)
+              [32m+[0m[0m type        = "network-hdd"
+            }
+        }
+
+      [32m+[0m[0m network_interface {
+          [32m+[0m[0m index              = (known after apply)
+          [32m+[0m[0m ip_address         = (known after apply)
+          [32m+[0m[0m ipv4               = true
+          [32m+[0m[0m ipv6               = (known after apply)
+          [32m+[0m[0m ipv6_address       = (known after apply)
+          [32m+[0m[0m mac_address        = (known after apply)
+          [32m+[0m[0m nat                = false
+          [32m+[0m[0m nat_ip_address     = (known after apply)
+          [32m+[0m[0m nat_ip_version     = (known after apply)
+          [32m+[0m[0m security_group_ids = (known after apply)
+          [32m+[0m[0m subnet_id          = (known after apply)
+        }
+
+      [32m+[0m[0m resources {
+          [32m+[0m[0m core_fraction = 100
+          [32m+[0m[0m cores         = 4
+          [32m+[0m[0m memory        = 8
+        }
+
+      [32m+[0m[0m scheduling_policy {
+          [32m+[0m[0m preemptible = true
+        }
+    }
+
+[1mPlan:[0m 18 to add, 0 to change, 0 to destroy.
+[0m
+Changes to Outputs:
+  [32m+[0m[0m admin_ip               = (known after apply)
+  [32m+[0m[0m load_balancer_listener = [
+      [32m+[0m[0m {
+          [32m+[0m[0m address = (known after apply)
+          [32m+[0m[0m name    = "web-app"
+          [32m+[0m[0m port    = 80
+        },
+    ]
+  [32m+[0m[0m nat_ip                 = (known after apply)
+  [32m+[0m[0m network_id             = (known after apply)
+  [32m+[0m[0m subnet_id              = {
+      [32m+[0m[0m ru-central1-a = (known after apply)
+      [32m+[0m[0m ru-central1-b = (known after apply)
+      [32m+[0m[0m ru-central1-d = (known after apply)
+    }
+[0m[1m
+Do you want to perform these actions?[0m
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+
+  [1mEnter a value:[0m [0m
+[0m[1myandex_vpc_network.network: Creating...[0m[0m
+[0m[1myandex_vpc_network.network: Creation complete after 2s [id=enpp5s5dqgc9f8spu8hq][0m
+[0m[1myandex_vpc_subnet.nat_subnet: Creating...[0m[0m
+[0m[1myandex_vpc_security_group.nat_security_group: Creating...[0m[0m
+[0m[1myandex_vpc_subnet.nat_subnet: Creation complete after 0s [id=e9blfbb1jghurn1nqr9l][0m
+[0m[1myandex_vpc_security_group.nat_security_group: Creation complete after 1s [id=enptai9nkuuf64a7hlj0][0m
+[0m[1mmodule.admin_vm.yandex_compute_instance.vm[0]: Creating...[0m[0m
+[0m[1mmodule.nat_vm.yandex_compute_instance.vm[0]: Creating...[0m[0m
+[0m[1mmodule.nat_vm.yandex_compute_instance.vm[0]: Still creating... [10s elapsed][0m[0m
+[0m[1mmodule.admin_vm.yandex_compute_instance.vm[0]: Still creating... [10s elapsed][0m[0m
+[0m[1mmodule.admin_vm.yandex_compute_instance.vm[0]: Still creating... [20s elapsed][0m[0m
+[0m[1mmodule.nat_vm.yandex_compute_instance.vm[0]: Still creating... [20s elapsed][0m[0m
+[0m[1mmodule.nat_vm.yandex_compute_instance.vm[0]: Still creating... [30s elapsed][0m[0m
+[0m[1mmodule.admin_vm.yandex_compute_instance.vm[0]: Still creating... [30s elapsed][0m[0m
+[0m[1mmodule.nat_vm.yandex_compute_instance.vm[0]: Still creating... [40s elapsed][0m[0m
+[0m[1mmodule.admin_vm.yandex_compute_instance.vm[0]: Still creating... [40s elapsed][0m[0m
+[0m[1mmodule.nat_vm.yandex_compute_instance.vm[0]: Creation complete after 41s [id=fhm9l1mghuifb9ru5umc][0m
+[0m[1myandex_vpc_route_table.nat_route_table: Creating...[0m[0m
+[0m[1myandex_vpc_route_table.nat_route_table: Creation complete after 1s [id=enpo1qks9urrhigvpnsk][0m
+[0m[1myandex_vpc_subnet.subnets["final-work-subnet-b"]: Creating...[0m[0m
+[0m[1myandex_vpc_subnet.subnets["final-work-subnet-a"]: Creating...[0m[0m
+[0m[1myandex_vpc_subnet.subnets["final-work-subnet-d"]: Creating...[0m[0m
+[0m[1myandex_vpc_subnet.subnets["final-work-subnet-a"]: Creation complete after 0s [id=e9bl9pf963apinhpaqnr][0m
+[0m[1myandex_vpc_subnet.subnets["final-work-subnet-b"]: Creation complete after 1s [id=e2ldvr8gfl48uk51muuk][0m
+[0m[1mmodule.admin_vm.yandex_compute_instance.vm[0]: Creation complete after 43s [id=fhm029nmc2f6mj2s8nvp][0m
+[0m[1myandex_vpc_subnet.subnets["final-work-subnet-d"]: Creation complete after 2s [id=fl8cr8869umtklh7iglg][0m
+[0m[1mmodule.master_nodes["final-work-subnet-a"].yandex_compute_instance.vm[0]: Creating...[0m[0m
+[0m[1mmodule.worker_nodes["final-work-subnet-a"].yandex_compute_instance.vm[0]: Creating...[0m[0m
+[0m[1mmodule.master_nodes["final-work-subnet-b"].yandex_compute_instance.vm[0]: Creating...[0m[0m
+[0m[1mmodule.master_nodes["final-work-subnet-d"].yandex_compute_instance.vm[0]: Creating...[0m[0m
+[0m[1mmodule.worker_nodes["final-work-subnet-d"].yandex_compute_instance.vm[0]: Creating...[0m[0m
+[0m[1mmodule.worker_nodes["final-work-subnet-b"].yandex_compute_instance.vm[0]: Creating...[0m[0m
+[0m[1mmodule.master_nodes["final-work-subnet-a"].yandex_compute_instance.vm[0]: Still creating... [10s elapsed][0m[0m
+[0m[1mmodule.worker_nodes["final-work-subnet-a"].yandex_compute_instance.vm[0]: Still creating... [10s elapsed][0m[0m
+[0m[1mmodule.master_nodes["final-work-subnet-b"].yandex_compute_instance.vm[0]: Still creating... [10s elapsed][0m[0m
+[0m[1mmodule.master_nodes["final-work-subnet-d"].yandex_compute_instance.vm[0]: Still creating... [10s elapsed][0m[0m
+[0m[1mmodule.worker_nodes["final-work-subnet-d"].yandex_compute_instance.vm[0]: Still creating... [10s elapsed][0m[0m
+[0m[1mmodule.worker_nodes["final-work-subnet-b"].yandex_compute_instance.vm[0]: Still creating... [10s elapsed][0m[0m
+[0m[1mmodule.master_nodes["final-work-subnet-a"].yandex_compute_instance.vm[0]: Still creating... [20s elapsed][0m[0m
+[0m[1mmodule.master_nodes["final-work-subnet-b"].yandex_compute_instance.vm[0]: Still creating... [20s elapsed][0m[0m
+[0m[1mmodule.worker_nodes["final-work-subnet-a"].yandex_compute_instance.vm[0]: Still creating... [20s elapsed][0m[0m
+[0m[1mmodule.worker_nodes["final-work-subnet-d"].yandex_compute_instance.vm[0]: Still creating... [20s elapsed][0m[0m
+[0m[1mmodule.master_nodes["final-work-subnet-d"].yandex_compute_instance.vm[0]: Still creating... [20s elapsed][0m[0m
+[0m[1mmodule.worker_nodes["final-work-subnet-b"].yandex_compute_instance.vm[0]: Still creating... [20s elapsed][0m[0m
+[0m[1mmodule.worker_nodes["final-work-subnet-d"].yandex_compute_instance.vm[0]: Creation complete after 27s [id=fv4gsak9pfvpqt7p1pc5][0m
+[0m[1mmodule.master_nodes["final-work-subnet-a"].yandex_compute_instance.vm[0]: Still creating... [30s elapsed][0m[0m
+[0m[1mmodule.master_nodes["final-work-subnet-b"].yandex_compute_instance.vm[0]: Still creating... [30s elapsed][0m[0m
+[0m[1mmodule.worker_nodes["final-work-subnet-a"].yandex_compute_instance.vm[0]: Still creating... [30s elapsed][0m[0m
+[0m[1mmodule.master_nodes["final-work-subnet-d"].yandex_compute_instance.vm[0]: Still creating... [30s elapsed][0m[0m
+[0m[1mmodule.worker_nodes["final-work-subnet-b"].yandex_compute_instance.vm[0]: Still creating... [30s elapsed][0m[0m
+[0m[1mmodule.master_nodes["final-work-subnet-d"].yandex_compute_instance.vm[0]: Creation complete after 30s [id=fv47ui0iq5rje9sehrtv][0m
+[0m[1mmodule.worker_nodes["final-work-subnet-a"].yandex_compute_instance.vm[0]: Creation complete after 35s [id=fhm2vm9geusrlhcbcf5g][0m
+[0m[1mmodule.master_nodes["final-work-subnet-a"].yandex_compute_instance.vm[0]: Still creating... [40s elapsed][0m[0m
+[0m[1mmodule.master_nodes["final-work-subnet-b"].yandex_compute_instance.vm[0]: Still creating... [40s elapsed][0m[0m
+[0m[1mmodule.worker_nodes["final-work-subnet-b"].yandex_compute_instance.vm[0]: Still creating... [40s elapsed][0m[0m
+[0m[1mmodule.master_nodes["final-work-subnet-b"].yandex_compute_instance.vm[0]: Creation complete after 42s [id=epdhpsau0o14o353im99][0m
+[0m[1mmodule.worker_nodes["final-work-subnet-b"].yandex_compute_instance.vm[0]: Creation complete after 42s [id=epdc6ec5sqs444c3ge81][0m
+[0m[1myandex_lb_target_group.k8s_load_balancer: Creating...[0m[0m
+[0m[1myandex_lb_target_group.k8s_load_balancer: Creation complete after 2s [id=enpuon7hj34iu3bbidlc][0m
+[0m[1myandex_lb_network_load_balancer.k8s-load-balancer: Creating...[0m[0m
+[0m[1myandex_lb_network_load_balancer.k8s-load-balancer: Creation complete after 2s [id=enpm38lvpte2eeha07q9][0m
+[0m[1mmodule.master_nodes["final-work-subnet-a"].yandex_compute_instance.vm[0]: Still creating... [50s elapsed][0m[0m
+[0m[1mmodule.master_nodes["final-work-subnet-a"].yandex_compute_instance.vm[0]: Creation complete after 57s [id=fhmoupphfc2er3uk0pvv][0m
+[0m[1mlocal_file.inventory_cfg: Creating...[0m[0m
+[0m[1mlocal_file.inventory_cfg: Creation complete after 0s [id=1b5d9024f7a83bb0468002b673ed5eed4c0d0a49][0m
+[0m[1m[32m
+Apply complete! Resources: 18 added, 0 changed, 0 destroyed.
+[0m[0m[1m[32m
+Outputs:
+
+[0madmin_ip = "89.169.144.151"
+load_balancer_listener = [
+  {
+    "address" = "158.160.185.139"
+    "name" = "web-app"
+    "port" = 80
+  },
+]
+nat_ip = "62.84.114.46"
+network_id = "enpp5s5dqgc9f8spu8hq"
+subnet_id = {
+  "ru-central1-a" = "e9bl9pf963apinhpaqnr"
+  "ru-central1-b" = "e2ldvr8gfl48uk51muuk"
+  "ru-central1-d" = "fl8cr8869umtklh7iglg"
+}

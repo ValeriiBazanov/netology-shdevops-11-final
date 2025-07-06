@@ -112,17 +112,19 @@ terraform init
 terraform apply
 ```
 
+[Вывод лога](./log/create_infra.log)
+
 В результаты выполнения terraform скрипта создаются сеть, четыре подсети, nat инстанс, виртуальные машины для мастер и рабочих нод, сетевой балансировщик нагрузки и машина администратора. Сформирован файл "src/tmp/host.yml", который будет использоваться ansible для создания кластера kubernates.
 
-<image src="img/tbd" alt="Сеть">
+<image src="img/network.png" alt="Сеть">
 
-<image src="img/tbd" alt="Подсети">
+<image src="img/subnet.png" alt="Подсети">
 
-<image src="img/tbd" alt="Виртуальные машины">
+<image src="img/vm.png" alt="Виртуальные машины">
 
-<image src="img/tbd" alt="Балансировщик нагрузки">
+<image src="img/balancer.png" alt="Балансировщик нагрузки">
 
-<image src="img/tbd" alt="tfstate файл в bucket">
+<image src="img/tfstate.png" alt="tfstate файл в bucket">
 
 
 ## 4. Устанавливаем кластер kubernates
@@ -134,6 +136,8 @@ terraform apply
 ```
 ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ../tmp/host.yml playbook.yml --become --flush-cache
 ```
+
+[Вывод лога](./log/playbook.log)
 
 
 ### 4.1 Устанавливаем окружение для создания кластера kubernates
@@ -186,7 +190,7 @@ ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ../tmp/host.yml playbook.yml
 kubectl get nodes
 ```
 
-<image src="img/tbd" alt="kubectl get nodes">
+<image src="img/kubectl.png" alt="kubectl get nodes">
 
 
 ### 4.6 Устанавливаем окружение для кластера kubernates
@@ -205,13 +209,13 @@ kubectl get nodes
 
 Для возможности подключения по имени bazanovvv.ru к web-приложению и grafana добавил правило в файл "/etc/hosts": \<ip load balancer\> bazanovvv.ru.
 
-<image src="img/tbd" alt="hosts">
+<image src="img/hosts.png" alt="hosts">
 
 
 Web-страница доступна по адресу http://bazanovvv.ru
 
-<image src="img/tbd" alt="web-app">
+<image src="img/web.png" alt="web-app">
 
 Grafana доступна по адресу http://bazanovvv.ru/grafana/ 
 
-<image src="img/tbd" alt="grafana">
+<image src="img/grafana.png" alt="grafana">

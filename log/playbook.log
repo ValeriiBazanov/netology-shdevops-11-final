@@ -1,0 +1,316 @@
+
+PLAY [Install k8s] *************************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [master-ru-central1-b-1]
+ok: [master-ru-central1-d-1]
+ok: [master-ru-central1-a-1]
+ok: [worker-ru-central1-b-1]
+ok: [worker-ru-central1-a-1]
+ok: [worker-ru-central1-d-1]
+
+TASK [docker_install : Install docker dependencies] ****************************
+ok: [worker-ru-central1-b-1]
+ok: [worker-ru-central1-a-1]
+ok: [master-ru-central1-b-1]
+ok: [master-ru-central1-a-1]
+ok: [master-ru-central1-d-1]
+ok: [worker-ru-central1-d-1]
+
+TASK [docker_install : Add docker GPG key] *************************************
+changed: [master-ru-central1-a-1]
+changed: [worker-ru-central1-b-1]
+changed: [master-ru-central1-b-1]
+changed: [worker-ru-central1-a-1]
+changed: [master-ru-central1-d-1]
+changed: [worker-ru-central1-d-1]
+
+TASK [docker_install : Add docker apt repository] ******************************
+changed: [master-ru-central1-b-1]
+changed: [master-ru-central1-d-1]
+changed: [worker-ru-central1-a-1]
+changed: [worker-ru-central1-b-1]
+changed: [master-ru-central1-a-1]
+changed: [worker-ru-central1-d-1]
+
+TASK [docker_install : Install docker] *****************************************
+changed: [worker-ru-central1-b-1]
+changed: [master-ru-central1-b-1]
+changed: [master-ru-central1-d-1]
+changed: [worker-ru-central1-a-1]
+changed: [master-ru-central1-a-1]
+changed: [worker-ru-central1-d-1]
+
+TASK [docker_install : Enable and start docker] ********************************
+ok: [master-ru-central1-a-1]
+ok: [worker-ru-central1-b-1]
+ok: [master-ru-central1-d-1]
+ok: [worker-ru-central1-a-1]
+ok: [master-ru-central1-b-1]
+ok: [worker-ru-central1-d-1]
+
+TASK [docker_install : Allow ansible user to access docker socket] *************
+changed: [worker-ru-central1-a-1]
+changed: [master-ru-central1-a-1]
+changed: [master-ru-central1-b-1]
+changed: [worker-ru-central1-b-1]
+changed: [master-ru-central1-d-1]
+changed: [worker-ru-central1-d-1]
+
+TASK [docker_install : Download docker compose] ********************************
+changed: [worker-ru-central1-a-1]
+changed: [worker-ru-central1-b-1]
+changed: [master-ru-central1-b-1]
+changed: [master-ru-central1-d-1]
+changed: [master-ru-central1-a-1]
+changed: [worker-ru-central1-d-1]
+
+TASK [docker_install : Load modules] *******************************************
+changed: [master-ru-central1-a-1]
+changed: [worker-ru-central1-a-1]
+changed: [worker-ru-central1-b-1]
+changed: [master-ru-central1-b-1]
+changed: [master-ru-central1-d-1]
+changed: [worker-ru-central1-d-1]
+
+TASK [docker_install : Set net.ipv4.ip_forward] ********************************
+changed: [master-ru-central1-a-1]
+changed: [worker-ru-central1-a-1]
+changed: [master-ru-central1-d-1]
+changed: [worker-ru-central1-b-1]
+changed: [master-ru-central1-b-1]
+changed: [worker-ru-central1-d-1]
+
+TASK [docker_install : Set net.bridge.bridge-nf-call-iptables] *****************
+changed: [master-ru-central1-a-1]
+changed: [worker-ru-central1-a-1]
+changed: [master-ru-central1-b-1]
+changed: [master-ru-central1-d-1]
+changed: [worker-ru-central1-b-1]
+changed: [worker-ru-central1-d-1]
+
+TASK [docker_install : Set net.bridge.bridge-nf-call-ip6tables] ****************
+changed: [master-ru-central1-a-1]
+changed: [worker-ru-central1-a-1]
+changed: [master-ru-central1-b-1]
+changed: [worker-ru-central1-b-1]
+changed: [master-ru-central1-d-1]
+changed: [worker-ru-central1-d-1]
+
+TASK [k8s_install : Install k8s dependencies] **********************************
+ok: [worker-ru-central1-a-1]
+ok: [worker-ru-central1-b-1]
+ok: [master-ru-central1-a-1]
+ok: [master-ru-central1-b-1]
+ok: [master-ru-central1-d-1]
+ok: [worker-ru-central1-d-1]
+
+TASK [k8s_install : Disable swap] **********************************************
+changed: [master-ru-central1-a-1]
+changed: [worker-ru-central1-a-1]
+changed: [master-ru-central1-b-1]
+changed: [worker-ru-central1-b-1]
+changed: [master-ru-central1-d-1]
+changed: [worker-ru-central1-d-1]
+
+TASK [k8s_install : Create folder for keyrings] ********************************
+changed: [master-ru-central1-a-1]
+changed: [master-ru-central1-b-1]
+changed: [worker-ru-central1-a-1]
+changed: [worker-ru-central1-b-1]
+changed: [master-ru-central1-d-1]
+changed: [worker-ru-central1-d-1]
+
+TASK [k8s_install : Add gpg key] ***********************************************
+changed: [master-ru-central1-a-1]
+changed: [worker-ru-central1-a-1]
+changed: [worker-ru-central1-b-1]
+changed: [master-ru-central1-d-1]
+changed: [master-ru-central1-b-1]
+changed: [worker-ru-central1-d-1]
+
+TASK [k8s_install : Add repository] ********************************************
+changed: [worker-ru-central1-b-1]
+changed: [master-ru-central1-d-1]
+changed: [master-ru-central1-a-1]
+changed: [worker-ru-central1-a-1]
+changed: [master-ru-central1-b-1]
+changed: [worker-ru-central1-d-1]
+
+TASK [k8s_install : Install k8s] ***********************************************
+changed: [worker-ru-central1-b-1]
+changed: [worker-ru-central1-a-1]
+changed: [master-ru-central1-d-1]
+changed: [master-ru-central1-b-1]
+changed: [master-ru-central1-a-1]
+changed: [worker-ru-central1-d-1]
+
+TASK [k8s_install : Restart kubelet] *******************************************
+changed: [master-ru-central1-a-1]
+changed: [master-ru-central1-b-1]
+changed: [worker-ru-central1-a-1]
+changed: [master-ru-central1-d-1]
+changed: [worker-ru-central1-b-1]
+changed: [worker-ru-central1-d-1]
+
+TASK [k8s_install : Enable kubelet] ********************************************
+ok: [master-ru-central1-a-1]
+ok: [worker-ru-central1-a-1]
+ok: [master-ru-central1-b-1]
+ok: [master-ru-central1-d-1]
+ok: [worker-ru-central1-b-1]
+ok: [worker-ru-central1-d-1]
+
+TASK [k8s_install : Create a configuration file for containerd and set it to default] ***
+changed: [master-ru-central1-a-1]
+changed: [worker-ru-central1-a-1]
+changed: [master-ru-central1-b-1]
+changed: [worker-ru-central1-b-1]
+changed: [master-ru-central1-d-1]
+changed: [worker-ru-central1-d-1]
+
+TASK [k8s_install : Set cgroupdriver to systemd] *******************************
+changed: [master-ru-central1-a-1]
+changed: [worker-ru-central1-a-1]
+changed: [master-ru-central1-b-1]
+changed: [worker-ru-central1-b-1]
+changed: [master-ru-central1-d-1]
+changed: [worker-ru-central1-d-1]
+
+TASK [k8s_install : Restart containerd] ****************************************
+changed: [worker-ru-central1-a-1]
+changed: [master-ru-central1-a-1]
+changed: [worker-ru-central1-b-1]
+changed: [master-ru-central1-d-1]
+changed: [master-ru-central1-b-1]
+changed: [worker-ru-central1-d-1]
+
+PLAY [Create cluster] **********************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [master-ru-central1-a-1]
+
+TASK [create_cluster : Initialize the Kubernetes cluster using kubeadm] ********
+changed: [master-ru-central1-a-1]
+
+TASK [create_cluster : Alter permission] ***************************************
+changed: [master-ru-central1-a-1] => (item=mkdir -p $HOME/.kube)
+changed: [master-ru-central1-a-1] => (item=sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config)
+changed: [master-ru-central1-a-1] => (item=sudo chown $(id -u):$(id -g) $HOME/.kube/config)
+
+TASK [create_cluster : Install calico pod network] *****************************
+changed: [master-ru-central1-a-1] => (item=curl https://raw.githubusercontent.com/projectcalico/calico/v3.26.1/manifests/calico.yaml -O)
+changed: [master-ru-central1-a-1] => (item=kubectl apply -f calico.yaml)
+
+TASK [create_cluster : Generate join worker node command] **********************
+changed: [master-ru-central1-a-1]
+
+TASK [create_cluster : Copy join worker node command to local file] ************
+changed: [master-ru-central1-a-1 -> localhost]
+
+TASK [create_cluster : Generate join mester node command] **********************
+changed: [master-ru-central1-a-1]
+
+TASK [create_cluster : Copy join master node command to local file] ************
+changed: [master-ru-central1-a-1 -> localhost]
+
+TASK [create_cluster : Generate config file] ***********************************
+changed: [master-ru-central1-a-1]
+
+TASK [create_cluster : Copy config kubectl] ************************************
+changed: [master-ru-central1-a-1]
+
+PLAY [Worker node invite] ******************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [worker-ru-central1-a-1]
+ok: [worker-ru-central1-b-1]
+ok: [worker-ru-central1-d-1]
+
+TASK [worker_node_invite : Copy the join command to server location] ***********
+changed: [worker-ru-central1-a-1]
+changed: [worker-ru-central1-b-1]
+changed: [worker-ru-central1-d-1]
+
+TASK [worker_node_invite : Join the worker node to cluster] ********************
+changed: [worker-ru-central1-b-1]
+changed: [worker-ru-central1-a-1]
+changed: [worker-ru-central1-d-1]
+
+PLAY [Master node invite] ******************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [master-ru-central1-b-1]
+ok: [master-ru-central1-d-1]
+
+TASK [master_node_invite : Copy the join master node command to server location] ***
+changed: [master-ru-central1-b-1]
+changed: [master-ru-central1-d-1]
+
+TASK [master_node_invite : Join the master node to cluster] ********************
+changed: [master-ru-central1-d-1]
+changed: [master-ru-central1-b-1]
+
+PLAY [Prepare admin host] ******************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [admin-ru-central1-a-1]
+
+TASK [admin_prepare : Install k8s dependencies] ********************************
+ok: [admin-ru-central1-a-1]
+
+TASK [admin_prepare : Disable swap] ********************************************
+changed: [admin-ru-central1-a-1]
+
+TASK [admin_prepare : Create folder for keyrings] ******************************
+changed: [admin-ru-central1-a-1]
+
+TASK [admin_prepare : Add gpg key] *********************************************
+changed: [admin-ru-central1-a-1]
+
+TASK [admin_prepare : Add repository] ******************************************
+changed: [admin-ru-central1-a-1]
+
+TASK [admin_prepare : Install kubectl] *****************************************
+changed: [admin-ru-central1-a-1]
+
+TASK [admin_prepare : Create .kube directory] **********************************
+changed: [admin-ru-central1-a-1]
+
+TASK [admin_prepare : Copy config file to admin] *******************************
+changed: [admin-ru-central1-a-1]
+
+PLAY [Install kubernates env (ingress-controller, monitoring)] *****************
+
+TASK [Gathering Facts] *********************************************************
+ok: [admin-ru-central1-a-1]
+
+TASK [kubernater_env : Copy manifest directory] ********************************
+changed: [admin-ru-central1-a-1]
+
+TASK [kubernater_env : Run manifest create nginx ingress controller] ***********
+changed: [admin-ru-central1-a-1]
+
+TASK [kubernater_env : Clone kube-prometheus] **********************************
+changed: [admin-ru-central1-a-1]
+
+TASK [kubernater_env : Replace grafana config] *********************************
+changed: [admin-ru-central1-a-1] => (item=cp /home/ubuntu/manifests/grafana-config.yaml /home/ubuntu/kube-prometeus/manifests/grafana-config.yaml)
+changed: [admin-ru-central1-a-1] => (item=cp /home/ubuntu/manifests/grafana-networkPolicy.yaml /home/ubuntu/kube-prometeus/manifests/grafana-networkPolicy.yaml)
+
+TASK [kubernater_env : Run manifest to create kube-prometheus] *****************
+changed: [admin-ru-central1-a-1] => (item=kubectl apply --server-side -f /home/ubuntu/kube-prometeus/manifests/setup)
+changed: [admin-ru-central1-a-1] => (item=kubectl wait --for condition=Established --all CustomResourceDefinition --namespace=monitoring)
+changed: [admin-ru-central1-a-1] => (item=kubectl apply -f /home/ubuntu/kube-prometeus/manifests)
+changed: [admin-ru-central1-a-1] => (item=kubectl patch deployment -n monitoring grafana --patch-file /home/ubuntu/manifests/grafana-deployment-path.yaml)
+failed: [admin-ru-central1-a-1] (item=kubectl apply -f /home/ubuntu/manifests/ingress-grafana.yaml) => {"ansible_loop_var": "item", "changed": true, "cmd": "kubectl apply -f /home/ubuntu/manifests/ingress-grafana.yaml", "delta": "0:00:01.096497", "end": "2025-07-06 16:05:47.532191", "item": "kubectl apply -f /home/ubuntu/manifests/ingress-grafana.yaml", "msg": "non-zero return code", "rc": 1, "start": "2025-07-06 16:05:46.435694", "stderr": "Error from server (InternalError): error when creating \"/home/ubuntu/manifests/ingress-grafana.yaml\": Internal error occurred: failed calling webhook \"validate.nginx.ingress.kubernetes.io\": failed to call webhook: Post \"https://ingress-nginx-controller-admission.ingress-nginx.svc:443/networking/v1/ingresses?timeout=10s\": dial tcp 10.105.134.111:443: connect: connection refused", "stderr_lines": ["Error from server (InternalError): error when creating \"/home/ubuntu/manifests/ingress-grafana.yaml\": Internal error occurred: failed calling webhook \"validate.nginx.ingress.kubernetes.io\": failed to call webhook: Post \"https://ingress-nginx-controller-admission.ingress-nginx.svc:443/networking/v1/ingresses?timeout=10s\": dial tcp 10.105.134.111:443: connect: connection refused"], "stdout": "", "stdout_lines": []}
+
+PLAY RECAP *********************************************************************
+admin-ru-central1-a-1      : ok=14   changed=11   unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+master-ru-central1-a-1     : ok=33   changed=27   unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+master-ru-central1-b-1     : ok=26   changed=20   unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+master-ru-central1-d-1     : ok=26   changed=20   unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+worker-ru-central1-a-1     : ok=26   changed=20   unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+worker-ru-central1-b-1     : ok=26   changed=20   unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+worker-ru-central1-d-1     : ok=26   changed=20   unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
